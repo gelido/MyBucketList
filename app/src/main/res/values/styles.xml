@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme. -->
+    <style name="Base.AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="BlueBucket" parent="Base.AppTheme">
+        <!-- enable window content transitions -->
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowBackground">@android:color/background_light</item>
+        <item name="android:colorPrimary">#2196F3</item>
+        <item name="android:colorPrimaryDark">#1976D2</item>
+        <item name="android:colorAccent">#FFC107</item>
+        <item name="android:textColorPrimary">#212121</item>
+        <item name="android:text">#FFFFFF</item>
+        <!-- specify enter and exit transitions -->
+        <!-- options are: explode, slide, fade -->
+        <item name="android:windowEnterTransition">@transition/slide</item>
+        <item name="android:windowExitTransition">@transition/slide</item>
+
+        <!-- specify shared element transitions -->
+        <item name="android:windowSharedElementEnterTransition">
+            @transition/change_title_transform
+        </item>
+        <item name="android:windowSharedElementExitTransition">
+            @transition/change_title_transform
+        </item>
+
+    </style>
+
+    <style name="BlueBucket.TabLayout" parent="Widget.Design.TabLayout">
+        <!-- enable window content transitions -->
+        <item name="tabIndicatorColor">@color/accent</item>
+        <item name="tabBackground">@color/primary</item>
+        <item name="tabSelectedTextColor">@color/accent</item>
+        <item name="tabTextAppearance">@style/BlueBucket.TabTextAppearance</item>
+    </style>
+
+    <style name="BlueBucket.TabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#FFF</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
+
+    <style name="BlueBucket.Toolbar" parent="BlueBucket">
+        <item name="android:actionBarWidgetTheme">@style/BlueBucket.Hint</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:textColorSecondary">#FFFFFF</item>
+        <item name="android:textColorHint">#FFFFFF</item>
+    </style>
+
+    <style name="BlueBucket.Hint" parent="BlueBucket.Toolbar">
+        <item name="android:textColorHint">#FFFFFF</item>
+
+    </style>
+
+    <style name="BlueBucket.PopUp" parent="BlueBucket">
+        <item name="android:textColorPrimary">#212121</item>
+    </style>
+
+    <style name="BlueBucket.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="BlueBucket.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>
