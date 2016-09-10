@@ -8,6 +8,7 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,16 +16,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.rafaelcarvalho.mybucketlist.Interfaces.OnListChangeListener;
 import com.rafaelcarvalho.mybucketlist.R;
 import com.rafaelcarvalho.mybucketlist.activities.DetailActivity;
-import com.rafaelcarvalho.mybucketlist.model.Book;
 import com.rafaelcarvalho.mybucketlist.model.BucketListItem;
-import com.rafaelcarvalho.mybucketlist.model.BucketListMediaItem;
-import com.rafaelcarvalho.mybucketlist.util.BucketListItemType;
+import com.rafaelcarvalho.mybucketlist.util.Modification;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -33,29 +34,32 @@ import java.util.List;
 public class BucketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private Context mContext;
-    private List<Item> mData;
+    private List<BucketListItem> mData;
 
     private int mResourcesItemLayout;
 
+    private Comparator<BucketListItem> mItemComparator = new ItemComparator<>();
 
     private ColorMatrixColorFilter mGrayScale;
 
+    private OnListChangeListener changeListener;
 
-    public BucketListAdapter(Context context, List<BucketListItem> items, int resourcesItemLayout) {
+
+    public BucketListAdapter(Context context, List<BucketListItem> items, int resourcesItemLayout,
+                             OnListChangeListener listener) {
         this.mContext = context;
         this.mResourcesItemLayout = resourcesItemLayout;
         this.mData = new ArrayList<>();
-
-        computeData(items);
+        this.changeListener = listener;
+        sortData(items);
         ColorMatrix matrix = new ColorMatrix();
         matrix.setSaturation(0);
         mGrayScale= new ColorMatrixColorFilter(matrix);
     }
 
-    private void computeData(List<BucketListItem> items) {
-        for(BucketListItem item: items){
-            mData.add(new Item(item));
-        }
+    private void sortData(List<BucketListItem> items) {
+        mData = items;
+        Collections.sort(mData, mItemComparator);
     }
 
     @Override
@@ -69,33 +73,48 @@ public class BucketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, final int position) {
-        final Item item = mData.get(position);
+        final BucketListItem item = mData.get(position);
 
         final ItemViewHolder itemHolder = (ItemViewHolder) viewHolder;
-        itemHolder.txtTitle.setText(mData.get(position).title);
-        itemHolder.txtSubTitle.setText(mData.get(position).subTitle);
-        Picasso.with(mContext).load(item.info.getCover()).placeholder(R.mipmap.ic_launcher)
+        itemHolder.txtTitle.setText(mData.get(position).getTitle());
+        itemHolder.txtSubTitle.setText(mData.get(position).getSubtitle());
+        Picasso.with(mContext).load(item.getCover()).placeholder(R.mipmap.ic_launcher)
                 .into(itemHolder.iv_cover);
 
-        if(item.info.isSeen()){
+        if(item.isSeen()){
             //If the item was seen, image turns to gray scale
             itemHolder.iv_cover.setColorFilter(mGrayScale);
 
         }
 
-        itemHolder.switch_seen.setChecked(item.info.isSeen());
+        itemHolder.switch_seen.setChecked(item.isSeen());
         itemHolder.switch_seen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!item.info.isSeen()){
+                boolean newValue;
+
+                if(!item.isSeen()){
                     //apply gray scale
                     itemHolder.iv_cover.setColorFilter(mGrayScale);
-                    item.info.setSeen(true);
+                    newValue = true;
+                    item.setSeen(true);
                 }else{
                     //remove gray scale
                     itemHolder.iv_cover.setColorFilter(null);
-                    item.info.setSeen(false);
+                    newValue = false;
+                    item.setSeen(false);
                 }
+
+                sortData(mData);
+                int newPosition = mData.indexOf(item);
+                notifyItemMoved(viewHolder.getAdapterPosition(),newPosition);
+
+                //To avoid constant DB access instead of adding to the DB every time we change, we'll
+                // add it to a list that does everything in one go
+                Modification<Boolean> mod = new Modification<>(Modification.Type.UPDATE, item.getId());
+                mod.setField(Modification.Field.SEEN);
+                mod.setNewValue(newValue);
+                changeListener.itemChanged(mod);
             }
         });
 
@@ -107,6 +126,11 @@ public class BucketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         });
     }
 
+
+    @Override
+    public void onViewRecycled(RecyclerView.ViewHolder holder) {
+        ((ItemViewHolder) holder).iv_cover.setColorFilter(null);
+    }
 
     @Override
     public int getItemCount() {
@@ -128,11 +152,11 @@ public class BucketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         detailIntent.putExtra(DetailActivity.COVER_TRANSITION, uniqueCoverTransitionName);
 
         //Send data
-        Item item = mData.get(position);
-        detailIntent.putExtra(DetailActivity.TITLE, item.title);
-        detailIntent.putExtra(DetailActivity.COVER, item.info.getCover());
-        detailIntent.putExtra(DetailActivity.DESCRIPTION, item.info.getDescription());
-        detailIntent.putExtra(DetailActivity.RATING, item.info.getRating());
+        BucketListItem item = mData.get(position);
+        detailIntent.putExtra(DetailActivity.TITLE, item.getTitle());
+        detailIntent.putExtra(DetailActivity.COVER, item.getCover());
+        detailIntent.putExtra(DetailActivity.DESCRIPTION, item.getDescription());
+        detailIntent.putExtra(DetailActivity.RATING, item.getRating());
 
         Pair<View,String> pair3 = new Pair<View, String>(v.findViewById(R.id.iv_cover_item)
                 ,uniqueCoverTransitionName);
@@ -142,6 +166,15 @@ public class BucketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 .makeSceneTransitionAnimation((Activity)mContext, pair3);
 
         mContext.startActivity(detailIntent,options.toBundle());
+    }
+
+    public List<BucketListItem> getData() {
+        return mData;
+    }
+
+    public void setData(List<BucketListItem> mData) {
+        this.mData = mData;
+        sortData(mData);
     }
 
 
@@ -166,23 +199,19 @@ public class BucketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
 
-    /**
-     * Class created to contain the info for each category and subItems
-     */
-    private static class Item{
-        private BucketListItem info;
-        public String title; //contains category name, or title of itemList
-        public String subTitle;
+    private class ItemComparator <T extends BucketListItem> implements Comparator<T>
+    {
 
-        public Item(BucketListItem bucketListItem) {
-            this.title = bucketListItem.getTitle();
-            this.info = bucketListItem;
-            if(bucketListItem instanceof Book){
-                this.subTitle = ((Book)bucketListItem).getAuthor();
-            }else if(bucketListItem instanceof BucketListMediaItem){
-                this.subTitle = ((BucketListMediaItem) bucketListItem).getYear();
-            }
-
+        @Override
+        public int compare(T lItem, T rItem) {
+            boolean isSame = lItem.isSeen() == rItem.isSeen();
+            return (!isSame)? (lItem.isSeen()?1:-1): compareTitle(lItem, rItem);
         }
+
+        private int compareTitle(T lItem, T rItem) {
+            return lItem.getTitle().compareTo(rItem.getTitle());
+        }
+
+
     }
 }

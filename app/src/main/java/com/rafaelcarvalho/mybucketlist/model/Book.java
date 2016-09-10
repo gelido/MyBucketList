@@ -55,4 +55,9 @@ public class Book extends BucketListItem implements Parcelable{
     public void setAuthor(String author) {
         this.author = author;
     }
+
+    @Override
+    public String getSubtitle() {
+        return author;
+    }
 }

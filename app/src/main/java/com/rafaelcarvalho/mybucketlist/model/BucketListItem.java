@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Created by Rafael on 28/09/15.
@@ -120,5 +121,16 @@ public class BucketListItem implements Parcelable{
         dest.writeString(cover);
         dest.writeString(id);
         dest.writeByte((byte) (isSeen ? 1 : 0));
+    }
+
+    public String getSubtitle()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof BucketListItem && Objects.equals(this.getId(), ((BucketListItem) o).getId())
+                && Objects.equals(this.getTitle(), ((BucketListItem) o).getTitle());
     }
 }

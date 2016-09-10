@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 
+import com.rafaelcarvalho.mybucketlist.Interfaces.OnListChangeListener;
 import com.rafaelcarvalho.mybucketlist.R;
 import com.rafaelcarvalho.mybucketlist.adapters.BucketListAdapter;
 import com.rafaelcarvalho.mybucketlist.model.BucketListItem;
@@ -29,7 +30,7 @@ import java.util.List;
  * Use the {@link BucketListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BucketListFragment extends Fragment {
+public class BucketListFragment extends Fragment{
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_ITEMS = "items";
@@ -43,6 +44,9 @@ public class BucketListFragment extends Fragment {
 
 
     private BucketListItemType mType;
+    private OnListChangeListener mChangeListener;
+
+
 
     public BucketListFragment() {
         // Required empty public constructor
@@ -54,11 +58,13 @@ public class BucketListFragment extends Fragment {
      *
      * @return A new instance of fragment BucketListFragment.
      */
-    public static BucketListFragment newInstance(List<BucketListItem> items, BucketListItemType type) {
+    public static BucketListFragment newInstance(List<BucketListItem> items,
+                                                 BucketListItemType type, OnListChangeListener listener) {
         BucketListFragment fragment = new BucketListFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(ARG_ITEMS, (ArrayList<? extends Parcelable>) items);
         fragment.setType(type);
+        fragment.setChangeListener(listener);
         fragment.setArguments(args);
         return fragment;
     }
@@ -81,7 +87,8 @@ public class BucketListFragment extends Fragment {
         mBucketListView = (RecyclerView) root.findViewById(R.id.rv_bucketlist);
         //This is needed, can't remember why though
         mBucketListView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        mBucketListView.setAdapter(new BucketListAdapter(getActivity(),mItems,R.layout.list_item_item));
+        mBucketListView.setAdapter(new BucketListAdapter(getActivity(),mItems
+                ,R.layout.list_item_item, mChangeListener));
 
         return root;
     }
@@ -110,6 +117,12 @@ public class BucketListFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onPause() {
+        //TODO: Save all the seens and what nots to the DB.
+        super.onPause();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -133,9 +146,17 @@ public class BucketListFragment extends Fragment {
         this.mType = type;
     }
 
+
+    public OnListChangeListener getChangeListener() {
+        return mChangeListener;
+    }
+
+    public void setChangeListener(OnListChangeListener mChangeListener) {
+        this.mChangeListener = mChangeListener;
+    }
+
     public void updateList(List<BucketListItem> items){
-        mBucketListView.setAdapter(new BucketListAdapter(getActivity(),
-                items,R.layout.list_item_item));
+        ((BucketListAdapter) mBucketListView.getAdapter()).setData(items);
         mBucketListView.getAdapter().notifyDataSetChanged();
     }
 }

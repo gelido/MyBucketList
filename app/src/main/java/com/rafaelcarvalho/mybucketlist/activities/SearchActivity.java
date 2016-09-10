@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -20,7 +19,6 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -37,7 +35,11 @@ import com.rafaelcarvalho.mybucketlist.Interfaces.DetailFetcherCallback;
 import com.rafaelcarvalho.mybucketlist.Interfaces.ErrorCallback;
 import com.rafaelcarvalho.mybucketlist.Interfaces.ItemSearcher;
 import com.rafaelcarvalho.mybucketlist.Interfaces.SearchFinishedCallback;
+import com.rafaelcarvalho.mybucketlist.model.Book;
 import com.rafaelcarvalho.mybucketlist.model.BucketListItem;
+import com.rafaelcarvalho.mybucketlist.model.Movie;
+import com.rafaelcarvalho.mybucketlist.model.Series;
+import com.rafaelcarvalho.mybucketlist.util.AppResources;
 import com.rafaelcarvalho.mybucketlist.util.BucketListItemType;
 import com.rafaelcarvalho.mybucketlist.util.CacheManager;
 import com.rafaelcarvalho.mybucketlist.util.GoodReadsHelper;
@@ -217,11 +219,10 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     public void addItem(final RecyclerView.ViewHolder viewHolder, DetailFetcher fetcher) {
         //Gets the details and the callback adds to the DB and removes from list
 
-        try {
             final ProgressBar progressBar =
                     ((SearchResultAdapter.ItemViewHolder) viewHolder).getProgressBar();
             final ImageButton acceptButton = ((SearchResultAdapter.ItemViewHolder) viewHolder).getBtnAccept();
-
+            final int position  = viewHolder.getAdapterPosition();
 
         fetcher.fetchDetails(mAdapter.getBucketItemId(viewHolder.getAdapterPosition()),
                 viewHolder.getAdapterPosition(), new DetailFetcherCallback() {
@@ -244,8 +245,10 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                                 removeFromList(viewHolder.getAdapterPosition());
                         updateListVisibility();
                         mDatabaseHandler.addItem(item);
+
+
                         //Snackback that can undo the remove
-                        showSnackBarAdded(item, searchItem, viewHolder.getAdapterPosition());
+                        showSnackBarAdded(item, searchItem, position);
                     }
                 }, new ErrorCallback() {
                     @Override
@@ -260,9 +263,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                         showErrorMessage(message);
                     }
                 });
-        }catch (ClassCastException e) {
-            Snackbar.make(viewHolder.itemView , R.string.error_adding_item, Snackbar.LENGTH_LONG).show();
-        }
     }
 
     private void showSnackBarAdded(final BucketListItem item, final SimpleSearchGson.SearchItem searchItem,
@@ -272,8 +272,11 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                                 new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
+                                        mDatabaseHandler.remove(item);
                                         mAdapter.add(position,searchItem);
+
                                         mAdapter.notifyDataSetChanged();
+                                        getIntent().putExtra(IS_MODIFIED, false);
                                     }
                                 }).setCallback(new Snackbar.Callback() {
                                     @Override
@@ -344,6 +347,9 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             @Override
             public void onSearchFinished(List<SimpleSearchGson.SearchItem> data) {
                 if (data != null) {
+
+                    data = removeRepeats(data, mDatabaseHandler.getAllIds());
+
                     mAdapter.setData(data);
                     try {
                         mCacheManager.clearCache(mItemType);
@@ -361,6 +367,19 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             }
         });
         return true;
+    }
+
+    private List<SimpleSearchGson.SearchItem> removeRepeats(List<SimpleSearchGson.SearchItem> items
+            , ArrayList<String> ids) {
+        List<SimpleSearchGson.SearchItem> unique = new ArrayList<>();
+
+        for (SimpleSearchGson.SearchItem item : items)
+        {
+          if(ids.contains(item.getId()))
+              continue;
+          unique.add(item);
+        }
+        return unique;
     }
 
     @Override

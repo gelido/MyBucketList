@@ -12,26 +12,25 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
+import com.rafaelcarvalho.mybucketlist.Interfaces.OnListChangeListener;
 import com.rafaelcarvalho.mybucketlist.R;
 import com.rafaelcarvalho.mybucketlist.database.DatabaseHandler;
 import com.rafaelcarvalho.mybucketlist.fragments.BucketListFragment;
 import com.rafaelcarvalho.mybucketlist.model.BucketListItem;
 import com.rafaelcarvalho.mybucketlist.util.BucketListItemType;
+import com.rafaelcarvalho.mybucketlist.util.Modification;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import static com.rafaelcarvalho.mybucketlist.util.BucketListItemType.BOOKS;
-import static com.rafaelcarvalho.mybucketlist.util.BucketListItemType.MOVIES;
-import static com.rafaelcarvalho.mybucketlist.util.BucketListItemType.SERIES;
-
 public class TabbedListsActivity extends AppCompatActivity
-        implements BucketListFragment.OnFragmentInteractionListener,View.OnClickListener {
+        implements BucketListFragment.OnFragmentInteractionListener,View.OnClickListener,
+        OnListChangeListener{
 
     private ViewPager mViewPager;
 
@@ -39,6 +38,8 @@ public class TabbedListsActivity extends AppCompatActivity
     private static final int ADD_ITEM = 1;
 
 
+    //It's a Hashmap so we can make sure the same field got only the last change
+    private HashMap<Modification.Field,Modification> mModifications = new HashMap<>();
 
     private TabLayout mTabLayout;
 
@@ -66,6 +67,22 @@ public class TabbedListsActivity extends AppCompatActivity
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(sectionsPagerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                applyChanges();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         // Give the TabLayout the ViewPager
         mTabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
@@ -119,35 +136,74 @@ public class TabbedListsActivity extends AppCompatActivity
         if(resultCode == RESULT_OK){
             if(requestCode == ADD_ITEM){
 
-                //fetches the info from the DB on another thread depending on the type sent
-                final BucketListItemType type = BucketListItemType
-                        .values()[data.getIntExtra(SearchActivity.ITEM_TYPE,-1)];
+                //TODO: so you don't lose the train of though, when this reaches here, supposedly the
+                // added item is already on the DB (and hopefully on the AppResources), so here we should just
+                // need to update the list with what's on the Singleton
 
-                AsyncTask<Integer,Void, List<BucketListItem>> task =
-                        new AsyncTask<Integer, Void, List<BucketListItem>>() {
-                    @Override
-                    protected List<BucketListItem> doInBackground(Integer ... params) {
-                        BucketListItemType type = BucketListItemType.values()[params[0]];
+                if (data.getBooleanExtra(SearchActivity.IS_MODIFIED, true)) {
 
-                        return mDatabaseHandler.getAllFromType(type);
-                    }
+                    final BucketListItemType type = BucketListItemType
+                            .values()[data.getIntExtra(SearchActivity.ITEM_TYPE,-1)];
 
 
-                            @Override
-                            protected void onPostExecute(List<BucketListItem> items) {
-                                //TODO: update lists
-                                for (Fragment fragment: getSupportFragmentManager().getFragments()){
-                                    if(((BucketListFragment) fragment).getType() == type){
-                                        ((BucketListFragment) fragment).updateList(items);
+                    //fetches the info from the DB on another thread depending on the type sent
+                    AsyncTask<Integer,Void, List<BucketListItem>> task =
+                            new AsyncTask<Integer, Void, List<BucketListItem>>() {
+                        @Override
+                        protected List<BucketListItem> doInBackground(Integer ... params) {
+                            BucketListItemType type = BucketListItemType.values()[params[0]];
+
+                            return mDatabaseHandler.getAllFromType(type);
+                        }
+
+
+                                @Override
+                                protected void onPostExecute(List<BucketListItem> items) {
+                                    for (Fragment fragment: getSupportFragmentManager().getFragments()){
+                                        if(((BucketListFragment) fragment).getType() == type){
+                                            ((BucketListFragment) fragment).updateList(items);
+                                        }
                                     }
-
                                 }
-                            }
-                        };
+                            };
 
-                task.execute(data.getIntExtra(SearchActivity.ITEM_TYPE,-1));
+                    task.execute(data.getIntExtra(SearchActivity.ITEM_TYPE,-1));
+                }
             }
         }
+    }
+
+    @Override
+    public void itemChanged(Modification mod) {
+        //Add the modifications, so afterwards we can apply them all
+        mModifications.put(mod.getField(),mod);
+    }
+
+    @Override
+    public void applyChanges() {
+
+
+        //Save to DB in background
+        new AsyncTask<Void,Void,Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                mDatabaseHandler.applyChanges(new ArrayList<>(mModifications.values()));
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                mModifications.clear();
+            }
+        }.execute();
+
+
+    }
+
+    @Override
+    protected void onPause() {
+        applyChanges();
+        super.onPause();
     }
 
     /**
@@ -170,7 +226,7 @@ public class TabbedListsActivity extends AppCompatActivity
 
             BucketListItemType type = BucketListItemType.values()[position];
             List<BucketListItem> items = mDatabaseHandler.getAllFromType(type);
-            return BucketListFragment.newInstance(items,type);
+            return BucketListFragment.newInstance(items,type, TabbedListsActivity.this);
         }
 
         @Override
@@ -191,11 +247,11 @@ public class TabbedListsActivity extends AppCompatActivity
 
             switch (type) {
                 case MOVIES:
-                    return MOVIES.getTitle();
+                    return getResources().getString(R.string.movies);
                 case SERIES:
-                    return SERIES.getTitle();
+                    return getResources().getString(R.string.series);
                 case BOOKS:
-                    return BOOKS.getTitle();
+                    return getResources().getString(R.string.books);
             }
             return null;
         }

@@ -76,6 +76,8 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 final ProgressBar progressBar = ((ItemViewHolder) holder).getProgressBar();
                 progressBar.setIndeterminate(true);
                 progressBar.setVisibility(View.VISIBLE);
+                final ImageButton btnAccept = ((ItemViewHolder) holder).getBtnAccept();
+                btnAccept.setVisibility(View.INVISIBLE);
 
 
 
@@ -89,6 +91,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                 ((SearchActivity) mContext).
                                         startActivityWithAnimation(v, position, item);
                                 progressBar.setVisibility(View.INVISIBLE);
+                                btnAccept.setVisibility(View.VISIBLE);
                             }
                         });
                     }
@@ -101,6 +104,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             public void run() {
                                 Toast.makeText(mContext, message,Toast.LENGTH_SHORT).show();
                                 progressBar.setVisibility(View.INVISIBLE);
+                                btnAccept.setVisibility(View.VISIBLE);
                             }
                         });
                     }

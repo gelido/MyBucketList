@@ -15,11 +15,14 @@ import com.rafaelcarvalho.mybucketlist.model.Movie;
 import com.rafaelcarvalho.mybucketlist.model.Series;
 import com.rafaelcarvalho.mybucketlist.util.AppResources;
 import com.rafaelcarvalho.mybucketlist.util.BucketListItemType;
+import com.rafaelcarvalho.mybucketlist.util.Modification;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+
+import static com.rafaelcarvalho.mybucketlist.util.Modification.Type.UPDATE;
 
 /**
  * Created by Rafael on 08/11/15.
@@ -111,58 +114,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public HashMap<BucketListItemType, List<BucketListItem>> getAll() {
-        HashMap<BucketListItemType, List<BucketListItem>> itemMap = AppResources.getItemMap();
-
-        String selectQuery = "SELECT * FROM " + TABLE_ITEMS;
+    public ArrayList<String> getAllIds()
+    {
+        ArrayList<String> ids = new ArrayList<>();
+        String selectQuery = "SELECT " + KEY_ID + " FROM " + TABLE_ITEMS;
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
-        if(cursor.moveToFirst()){
-            do{
-                BucketListItemType type = BucketListItemType.values()[cursor.getInt(7)];
-
-                switch (type){
-                    case MOVIES:
-                        Movie movie = new Movie();
-                        movie.setId(cursor.getString(0));
-                        movie.setTitle(cursor.getString(1));
-                        movie.setCover(cursor.getString(2));
-                        movie.setDescription(cursor.getString(3));
-                        movie.setRating(cursor.getFloat(4));
-                        movie.setSeen(cursor.getInt(8) > 0);
-                        movie.setYear(cursor.getString(5));
-                        addToMap(itemMap, type,movie);
-                        break;
-                    case SERIES:
-                        Series series = new Series();
-                        series.setId(cursor.getString(0));
-                        series.setTitle(cursor.getString(1));
-                        series.setCover(cursor.getString(2));
-                        series.setDescription(cursor.getString(3));
-                        series.setRating(cursor.getFloat(4));
-                        series.setSeen(cursor.getInt(8) > 0);
-                        series.setYear(cursor.getString(5));
-                        addToMap(itemMap, type, series);
-                        break;
-                    case BOOKS:
-                        Book book = new Book();
-                        book.setId(cursor.getString(0));
-                        book.setTitle(cursor.getString(1));
-                        book.setCover(cursor.getString(2));
-                        book.setDescription(cursor.getString(3));
-                        book.setRating(cursor.getFloat(4));
-                        book.setSeen(cursor.getInt(8) > 0);
-                        book.setAuthor(cursor.getString(6));
-                        addToMap(itemMap, type, book);
-                        break;
-                }
-            }while(cursor.moveToNext());
+        for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            ids.add(cursor.getString(0));
         }
+
         cursor.close();
-        return itemMap;
+        db.close();
+        return ids;
     }
+
+
 
 
     public List<BucketListItem> getAllFromType(BucketListItemType type){
@@ -219,27 +188,58 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 break;
         }
         cursor.close();
+        db.close();
         Log.d("DATABASE", "REACHED DATABASE");
         return items;
     }
 
-
-
-    private void addToMap(HashMap<BucketListItemType, List<BucketListItem>> hashMap,
-                                  BucketListItemType type, BucketListItem item){
-            List<BucketListItem> list = hashMap.get(type);
-            if(list == null){
-                list = new LinkedList<>();
-                hashMap.put(type,list);
-            }
-            list.add(item);
-
-    }
 
     public void remove(BucketListItem item) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_ITEMS, KEY_ID + " = ?",
                 new String[] { String.valueOf(item.getId()) });
         db.close();
+    }
+
+    public void applyChanges(List<Modification> modifications)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        for (Modification mod :modifications)
+        {
+            ContentValues values = new ContentValues();
+
+            switch (mod.getType())
+            {
+                case UPDATE:
+                    //Switch because we might want to update other fields in the future
+
+                    switch (mod.getField())
+                    {
+                        case SEEN:
+                            values.put(KEY_SEEN, ((Boolean) mod.getNewValue())?1:0); //key seen is integer
+                            break;
+                        default:
+                    }
+                    db.update(TABLE_ITEMS,values, "" + KEY_ID+"= ?", new String[]{mod.getId()});
+
+                    break;
+                case CREATE:
+                    //TODO:
+                    break;
+                case REMOVE:
+                    //TODO:
+                    break;
+                default:
+            }
+        }
+
+
+        db.close();
+
+    }
+
+    public HashMap<BucketListItemType, List<BucketListItem>> getAll() {
+        return null;
     }
 }

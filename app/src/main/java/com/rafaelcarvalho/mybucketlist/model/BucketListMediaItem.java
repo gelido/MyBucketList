@@ -48,4 +48,9 @@ public abstract class BucketListMediaItem extends BucketListItem implements Parc
     public void setYear(String year) {
         this.year = year;
     }
+
+    @Override
+    public String getSubtitle() {
+        return year;
+    }
 }
