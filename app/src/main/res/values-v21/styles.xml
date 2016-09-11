@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Base application theme. -->
-    <style name="Base.AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-    </style>
+    <style name="Base.AppTheme" parent="Theme.AppCompat.Light.NoActionBar"></style>
 
 
     <!--Blue Theme-->
@@ -10,12 +9,18 @@
         <!-- enable window content transitions -->
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowBackground">@android:color/background_light</item>
-        <item name="android:colorPrimary">#3F51B5</item>
-        <item name="bsPrimaryColor">#3F51B5</item>
-        <item name="android:colorPrimaryDark">#303F9F</item>
-        <item name="bsPrimaryDarkColor">#303F9F</item>
-        <item name="android:colorAccent">#ffc107</item>
-        <item name="bsAccentColor">#ffc107</item>
+        <item name="android:colorPrimary">@color/primary_blue</item>
+        <item name="bsPrimaryColor">@color/primary_blue</item>
+        <item name="android:colorPrimaryDark">@color/primary_blue_dark</item>
+        <item name="bsPrimaryDarkColor">@color/primary_blue_dark</item>
+        <item name="android:colorAccent">@color/accent_blue</item>
+        <item name="bsAccentColor">@color/accent_blue</item>
+
+
+        <item name="android:colorControlNormal">@color/accent_blue</item>
+        <item name="android:colorControlHighlight">@color/accent_blue</item>
+        <item name="android:colorControlActivated">@color/accent_blue</item>
+
         <!-- specify enter and exit transitions -->
         <!-- options are: explode, slide, fade -->
         <item name="android:windowEnterTransition">@transition/slide</item>
@@ -33,6 +38,7 @@
         <item name="bsPopUpStyle">@style/BlueBucket.PopUp</item>
         <item name="bsTabLayoutStyle">@style/BlueBucket.TabLayout</item>
         <item name="bsAppbarOverlayStyle">@style/BlueBucket.AppBarOverlay</item>
+
     </style>
 
     <style name="BlueBucket.TabLayout" parent="Widget.Design.TabLayout">
@@ -42,6 +48,7 @@
         <item name="tabSelectedTextColor">?bsAccentColor</item>
         <item name="tabTextAppearance">@style/BlueBucket.TabTextAppearance</item>
     </style>
+
 
     <style name="BlueBucket.TabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">14sp</item>
@@ -54,7 +61,7 @@
         <item name="android:textColorPrimary">#FFFFFF</item>
         <item name="android:textColorSecondary">#FFFFFF</item>
         <item name="android:textColorHint">#FFFFFF</item>
-        <item name="android:background"> ?bsPrimaryColor</item>
+        <item name="android:background">?bsPrimaryColor</item>
     </style>
 
     <style name="BlueBucket.Hint" parent="BlueBucket.Toolbar">
@@ -116,10 +123,8 @@
 
     <style name="OrangeBucket.Toolbar" parent="OrangeBucket">
         <item name="android:actionBarWidgetTheme">@style/OrangeBucket.Hint</item>
-        <item name="android:textColorPrimary">#FFFFFF</item>
-        <item name="android:textColorSecondary">#FFFFFF</item>
         <item name="android:textColorHint">#FFFFFF</item>
-        <item name="android:background"> ?bsPrimaryColor</item>
+        <item name="android:background">?bsPrimaryColor</item>
     </style>
 
     <style name="OrangeBucket.Hint" parent="OrangeBucket.Toolbar">

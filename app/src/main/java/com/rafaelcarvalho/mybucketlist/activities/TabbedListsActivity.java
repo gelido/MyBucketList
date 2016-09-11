@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -21,6 +23,7 @@ import com.rafaelcarvalho.mybucketlist.Interfaces.OnListChangeListener;
 import com.rafaelcarvalho.mybucketlist.R;
 import com.rafaelcarvalho.mybucketlist.database.DatabaseHandler;
 import com.rafaelcarvalho.mybucketlist.fragments.BucketListFragment;
+import com.rafaelcarvalho.mybucketlist.fragments.SettingsActivityFragment;
 import com.rafaelcarvalho.mybucketlist.model.BucketListItem;
 import com.rafaelcarvalho.mybucketlist.util.BucketListItemType;
 import com.rafaelcarvalho.mybucketlist.util.Modification;
@@ -54,7 +57,21 @@ public class TabbedListsActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.OrangeBucket);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String colorValue = prefs.getString(SettingsActivityFragment.COLOR_LIST_KEY, "0");
+
+        switch (colorValue)
+        {
+            case "0":
+                setTheme(R.style.BlueBucket);
+                break;
+            case "1":
+                setTheme(R.style.OrangeBucket);
+                break;
+            default:
+                setTheme(R.style.BlueBucket);
+        }
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbed_lists);

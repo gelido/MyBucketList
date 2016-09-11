@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Base application theme. -->
-    <style name="Base.AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-    </style>
+    <style name="Base.AppTheme" parent="Theme.AppCompat.Light.NoActionBar"></style>
 
 
     <!--Blue Theme-->
@@ -16,7 +15,6 @@
         <item name="bsPrimaryDarkColor">#303F9F</item>
         <item name="android:colorAccent">#ffc107</item>
         <item name="bsAccentColor">#ffc107</item>
-        <item name="android:textColorPrimary">@color/bright_foreground_inverse_material_light</item>
         <!-- specify enter and exit transitions -->
         <!-- options are: explode, slide, fade -->
         <item name="android:windowEnterTransition">@transition/slide</item>
@@ -55,7 +53,7 @@
         <item name="android:textColorPrimary">#FFFFFF</item>
         <item name="android:textColorSecondary">#FFFFFF</item>
         <item name="android:textColorHint">#FFFFFF</item>
-        <item name="android:background"> ?bsPrimaryColor</item>
+        <item name="android:background">?bsPrimaryColor</item>
     </style>
 
     <style name="BlueBucket.PopUp" parent="BlueBucket">
@@ -78,7 +76,6 @@
         <item name="bsPrimaryDarkColor">@color/primary_orange_dark</item>
         <item name="android:colorAccent">@color/accent_orange</item>
         <item name="bsAccentColor">@color/accent_orange</item>
-        <item name="android:textColorPrimary">@color/bright_foreground_inverse_material_light</item>
         <!-- specify enter and exit transitions -->
         <!-- options are: explode, slide, fade -->
         <item name="android:windowEnterTransition">@transition/slide</item>
@@ -117,7 +114,7 @@
         <item name="android:textColorPrimary">#FFFFFF</item>
         <item name="android:textColorSecondary">#FFFFFF</item>
         <item name="android:textColorHint">#FFFFFF</item>
-        <item name="android:background"> ?bsPrimaryColor</item>
+        <item name="android:background">?bsPrimaryColor</item>
     </style>
 
     <style name="OrangeBucket.Hint" parent="OrangeBucket.Toolbar">

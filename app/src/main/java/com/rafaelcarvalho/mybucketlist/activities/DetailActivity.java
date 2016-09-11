@@ -1,8 +1,10 @@
 package com.rafaelcarvalho.mybucketlist.activities;
 
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +15,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.rafaelcarvalho.mybucketlist.R;
+import com.rafaelcarvalho.mybucketlist.fragments.SettingsActivityFragment;
 import com.rafaelcarvalho.mybucketlist.util.AppResources;
 import com.squareup.picasso.Picasso;
 
@@ -34,7 +37,20 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.OrangeBucket);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String colorValue = prefs.getString(SettingsActivityFragment.COLOR_LIST_KEY, "0");
+
+        switch (colorValue)
+        {
+            case "0":
+                setTheme(R.style.BlueBucket);
+                break;
+            case "1":
+                setTheme(R.style.OrangeBucket);
+                break;
+            default:
+                setTheme(R.style.BlueBucket);
+        }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);

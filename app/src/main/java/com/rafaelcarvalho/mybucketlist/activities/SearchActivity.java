@@ -3,9 +3,11 @@ package com.rafaelcarvalho.mybucketlist.activities;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -34,6 +36,7 @@ import com.rafaelcarvalho.mybucketlist.Interfaces.SearchFinishedCallback;
 import com.rafaelcarvalho.mybucketlist.R;
 import com.rafaelcarvalho.mybucketlist.adapters.SearchResultAdapter;
 import com.rafaelcarvalho.mybucketlist.database.DatabaseHandler;
+import com.rafaelcarvalho.mybucketlist.fragments.SettingsActivityFragment;
 import com.rafaelcarvalho.mybucketlist.gson.SimpleSearchGson;
 import com.rafaelcarvalho.mybucketlist.model.BucketListItem;
 import com.rafaelcarvalho.mybucketlist.util.AppResources;
@@ -69,6 +72,20 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String colorValue = prefs.getString(SettingsActivityFragment.COLOR_LIST_KEY, "0");
+
+        switch (colorValue)
+        {
+            case "0":
+                setTheme(R.style.BlueBucket);
+                break;
+            case "1":
+                setTheme(R.style.OrangeBucket);
+                break;
+            default:
+                setTheme(R.style.BlueBucket);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

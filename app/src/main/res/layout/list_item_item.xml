@@ -42,7 +42,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Title"
+                android:theme="@style/BlueBucket"
+                android:text="@string/title"
                 android:id="@+id/tv_title"
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_weight="50"
@@ -52,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Year"
+                android:text="@string/year"
                 android:id="@+id/tv_subtitle"
                 android:layout_gravity="center"
                 android:layout_weight="50" />
