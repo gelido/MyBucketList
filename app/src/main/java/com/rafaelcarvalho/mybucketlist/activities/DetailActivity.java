@@ -13,6 +13,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.rafaelcarvalho.mybucketlist.R;
+import com.rafaelcarvalho.mybucketlist.util.AppResources;
 import com.squareup.picasso.Picasso;
 
 public class DetailActivity extends AppCompatActivity {
@@ -33,6 +34,8 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.OrangeBucket);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -58,7 +61,8 @@ public class DetailActivity extends AppCompatActivity {
         mRatingBar.setRating(rating);
         //Changing the color of the stars on the rating bar
         LayerDrawable stars = (LayerDrawable) mRatingBar.getProgressDrawable();
-        stars.getDrawable(2).setColorFilter(getResources().getColor(R.color.accent), PorterDuff.Mode.SRC_ATOP);
+        stars.getDrawable(2).setColorFilter(AppResources.
+                getFromAttrTheme(this,R.attr.bsAccentColor), PorterDuff.Mode.SRC_ATOP);
 
 
         mTxtRating = (TextView) findViewById(R.id.tv_rating_number);

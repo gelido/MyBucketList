@@ -26,19 +26,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.rafaelcarvalho.mybucketlist.Interfaces.AddItemHandler;
-import com.rafaelcarvalho.mybucketlist.R;
-import com.rafaelcarvalho.mybucketlist.adapters.SearchResultAdapter;
-import com.rafaelcarvalho.mybucketlist.database.DatabaseHandler;
-import com.rafaelcarvalho.mybucketlist.gson.SimpleSearchGson;
 import com.rafaelcarvalho.mybucketlist.Interfaces.DetailFetcher;
 import com.rafaelcarvalho.mybucketlist.Interfaces.DetailFetcherCallback;
 import com.rafaelcarvalho.mybucketlist.Interfaces.ErrorCallback;
 import com.rafaelcarvalho.mybucketlist.Interfaces.ItemSearcher;
 import com.rafaelcarvalho.mybucketlist.Interfaces.SearchFinishedCallback;
-import com.rafaelcarvalho.mybucketlist.model.Book;
+import com.rafaelcarvalho.mybucketlist.R;
+import com.rafaelcarvalho.mybucketlist.adapters.SearchResultAdapter;
+import com.rafaelcarvalho.mybucketlist.database.DatabaseHandler;
+import com.rafaelcarvalho.mybucketlist.gson.SimpleSearchGson;
 import com.rafaelcarvalho.mybucketlist.model.BucketListItem;
-import com.rafaelcarvalho.mybucketlist.model.Movie;
-import com.rafaelcarvalho.mybucketlist.model.Series;
 import com.rafaelcarvalho.mybucketlist.util.AppResources;
 import com.rafaelcarvalho.mybucketlist.util.BucketListItemType;
 import com.rafaelcarvalho.mybucketlist.util.CacheManager;
@@ -125,12 +122,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                 fetcher = new ImdbHelper.ImdbFetcher(this,mItemType);
                 break;
             case BOOKS:
-                fetcher = new DetailFetcher() {
-                    @Override
-                    public void fetchDetails(String id, int position, DetailFetcherCallback callback
-                            , ErrorCallback errorCallback) {
-                    }
-                };
+                fetcher = new GoodReadsHelper.GoodReadsFetcher();
                 break;
             default:
                 fetcher = new DetailFetcher() {
@@ -267,6 +259,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
     private void showSnackBarAdded(final BucketListItem item, final SimpleSearchGson.SearchItem searchItem,
                                    final int position) {
+        int color = AppResources.getFromAttrTheme(this,R.attr.bsAccentColor);
         Snackbar snackbar = Snackbar.make(mCoordinatorLayout, getString(R.string.succes_item_added),
                             Snackbar.LENGTH_LONG).setAction(getString(R.string.btn_undo),
                                 new View.OnClickListener() {
@@ -282,12 +275,14 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                                     @Override
                                     public void onDismissed(Snackbar snackbar, int event) {
                                     }
-                                }).setActionTextColor(getResources().getColor(R.color.accent));
+                                }).setActionTextColor(color);
         snackbar.show();
     }
 
     private SimpleSearchGson.SearchItem removeFromList(final int position) {
         //This method is called on the Background
+
+
 
         SimpleSearchGson.SearchItem removed = mAdapter.getData().get(position);
         mAdapter.remove(position);

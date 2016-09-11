@@ -1,5 +1,10 @@
 package com.rafaelcarvalho.mybucketlist.util;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.util.TypedValue;
+
+import com.rafaelcarvalho.mybucketlist.R;
 import com.rafaelcarvalho.mybucketlist.model.BucketListItem;
 
 import java.util.ArrayList;
@@ -112,5 +117,36 @@ public class AppResources {
                 return;
         }
         list.get(position).setSeen(newValue);
+    }
+
+    /**
+     *
+     * taken from http://stackoverflow.com/questions/11248119/java-equivalent-of-phps-implode-array-filter-array
+     *
+     * @param separator
+     * @param data
+     * @return
+     */
+    public static String implode(String separator, String... data) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < data.length - 1; i++) {
+            //data.length - 1 => to not add separator at the end
+            if (!data[i].matches(" *")) {//empty string are ""; " "; "  "; and so on
+                sb.append(data[i]);
+                sb.append(separator);
+            }
+        }
+        sb.append(data[data.length - 1].trim());
+        return sb.toString();
+    }
+
+
+    public static int getFromAttrTheme(Context context, int resourceId)
+    {
+        //get the accent color from the theme
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(resourceId, typedValue, true);
+        return typedValue.data;
     }
 }

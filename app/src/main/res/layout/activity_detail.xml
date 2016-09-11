@@ -20,13 +20,13 @@
             android:id="@+id/appBarLayout"
             android:layout_height="@dimen/detail_backdrop_height"
             android:layout_width="match_parent"
-            android:theme="@style/BlueBucket.Toolbar">
+            android:theme="?bsAppbarOverlayStyle">
 
             <android.support.design.widget.CollapsingToolbarLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                app:contentScrim="@color/primary"
+                app:contentScrim="?bsPrimaryColor"
                 android:id="@+id/collapsingToolbar"
                 app:expandedTitleMarginStart="48dp"
                 app:expandedTitleMarginEnd="64dp">
@@ -42,8 +42,8 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    app:popupTheme="@style/BlueBucket.Toolbar"
-                    android:theme="@style/BlueBucket.Toolbar"
+                    style="?bsToolbarStyle"
+                    app:popupTheme="?bsPopUpStyle"
                     app:layout_collapseMode="pin" />
             </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -65,11 +65,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="16dp"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Lorem ipsum dolor sit amet, eu nam probo sonet, sed nonumy minimum perpetua te, ius an exerci copiosae. Magna eleifend ut eam, mea no case laoreet, viris voluptua te vix. Qui solet aliquid an, vim ne enim docendi. Eu adhuc essent possim sea, patrioque sententiae scripserit vel te.
-
-An recusabo efficiantur mea, et saepe commodo omittam vel. Ei mea mollis recusabo, in nibh consequuntur ius. Vel tation impedit reprimique at. Duo ea hinc impedit menandri, te nec cibo omittantur. Vim eros audire an, pro te inimicus appellantur accommodare. Ei enim voluptatibus pri.
-
-Aperiri dignissim quo ex. Ei semper offendit vix, augue eirmod menandri in has. Et sed alii graecis, per nibh omnesque deseruisse ea, soleat partiendo ei sea. Est liber inimicus an. Oratio salutatus moderatius his cu, ipsum quando iudicabit an est."
+                        android:text="-"
                         android:id="@+id/tv_description"
                         android:layout_gravity="center_horizontal"
                         android:layout_weight="1.45" />

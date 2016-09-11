@@ -35,13 +35,11 @@ public class BucketListFragment extends Fragment{
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_ITEMS = "items";
 
-    // TODO: Rename and change types of parameters
-    private List<BucketListItem> mItems;
-
     private RecyclerView mBucketListView;
 
     private OnFragmentInteractionListener mListener;
 
+    private BucketListAdapter mAdapter;
 
     private BucketListItemType mType;
     private OnListChangeListener mChangeListener;
@@ -72,9 +70,14 @@ public class BucketListFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        List<BucketListItem> items;
         if (getArguments() != null) {
-            mItems = getArguments().getParcelableArrayList(ARG_ITEMS);
+             items = getArguments().getParcelableArrayList(ARG_ITEMS);
+        }else{
+            items = new ArrayList<>();
         }
+        mAdapter = new BucketListAdapter(getActivity(), items, R.layout.list_item_item, mChangeListener);
     }
 
     @Override
@@ -87,8 +90,7 @@ public class BucketListFragment extends Fragment{
         mBucketListView = (RecyclerView) root.findViewById(R.id.rv_bucketlist);
         //This is needed, can't remember why though
         mBucketListView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        mBucketListView.setAdapter(new BucketListAdapter(getActivity(),mItems
-                ,R.layout.list_item_item, mChangeListener));
+        mBucketListView.setAdapter(mAdapter);
 
         return root;
     }
@@ -115,12 +117,6 @@ public class BucketListFragment extends Fragment{
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    @Override
-    public void onPause() {
-        //TODO: Save all the seens and what nots to the DB.
-        super.onPause();
     }
 
     /**
@@ -155,7 +151,8 @@ public class BucketListFragment extends Fragment{
         this.mChangeListener = mChangeListener;
     }
 
-    public void updateList(List<BucketListItem> items){
+    public void
+    updateList(List<BucketListItem> items){
         ((BucketListAdapter) mBucketListView.getAdapter()).setData(items);
         mBucketListView.getAdapter().notifyDataSetChanged();
     }

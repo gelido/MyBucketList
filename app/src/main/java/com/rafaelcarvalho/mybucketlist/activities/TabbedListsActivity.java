@@ -1,6 +1,7 @@
 package com.rafaelcarvalho.mybucketlist.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,7 +33,11 @@ public class TabbedListsActivity extends AppCompatActivity
         implements BucketListFragment.OnFragmentInteractionListener,View.OnClickListener,
         OnListChangeListener{
 
+    private static final String PREFS_NAME = "prefs";
+    private static final String PREF_ORANGE_THEME = "OrangeTheme";
     private ViewPager mViewPager;
+
+    private int mThemeId = -1;
 
     //CONSTANTS
     private static final int ADD_ITEM = 1;
@@ -49,6 +54,8 @@ public class TabbedListsActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.OrangeBucket);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbed_lists);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -106,17 +113,24 @@ public class TabbedListsActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            case R.id.action_settings:
+//                SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
+//                editor.putBoolean(PREF_ORANGE_THEME, true);
+//                editor.apply();
+//
+//                Intent intent = getIntent();
+//                finish();
+//
+//                startActivity(intent);
+                Intent intent = new Intent(this,SettingsActivity.class);
+                startActivity(intent);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -200,11 +214,6 @@ public class TabbedListsActivity extends AppCompatActivity
 
     }
 
-    @Override
-    protected void onPause() {
-        applyChanges();
-        super.onPause();
-    }
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

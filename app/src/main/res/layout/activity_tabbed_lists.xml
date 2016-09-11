@@ -18,8 +18,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/primary"
-            app:popupTheme="@style/BlueBucket.PopUp"
+            style="?bsToolbarStyle"
+            app:popupTheme="?bsPopUpStyle"
             app:layout_scrollFlags="scroll|enterAlways">
 
 
@@ -29,8 +29,7 @@
             android:id="@+id/sliding_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/BlueBucket"
-            style="@style/BlueBucket.TabLayout"
+            style="?bsTabLayoutStyle"
             app:tabMode="fixed" />
 
     </android.support.design.widget.AppBarLayout>
@@ -50,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="@color/accent"
+        app:backgroundTint="?bsAccentColor"
         android:src="@drawable/ic_add_white_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -80,7 +80,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 btnAccept.setVisibility(View.INVISIBLE);
 
 
-
+                // Get the details of the item
                 mFetcher.fetchDetails(searchItem.getId(), position, new DetailFetcherCallback() {
                     @Override
                     public void onFetchFinished(final BucketListItem item) {

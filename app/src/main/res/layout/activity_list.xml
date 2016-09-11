@@ -21,7 +21,7 @@
                 <android.widget.Toolbar
                     android:layout_width="match_parent"
                     android:id="@+id/toolbar"
-                    android:background="@color/primary"
+                    android:background="?bsPrimaryColor"
                     android:layout_height="?attr/actionBarSize"
                     android:theme="@style/BlueBucket.Toolbar"
                     app:popupTheme="@style/BlueBucket.PopUp"
@@ -46,7 +46,7 @@
                 app:layout_anchor="@id/rv_bucketlist"
                 app:layout_anchorGravity="bottom|right|end"
                 app:layout_behavior="com.rafaelcarvalho.mybucketlist.animators.ScrollAwareFABBehavior"
-                app:backgroundTint="@color/accent"
+                app:backgroundTint="?bsAccentColor"
                 android:clickable="true" />
 
             <com.rafaelcarvalho.mybucketlist.util.FloatingActionButtonMenu
@@ -69,7 +69,7 @@
                     android:paddingBottom="20dp"
                     android:src="@drawable/ic_book_white_24dp"
                     android:theme="@style/BlueBucket"
-                    app:backgroundTint="@color/accent"
+                    app:backgroundTint="?bsAccentColor"
                     app:fabSize="mini"/>
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/fab_series"
@@ -79,7 +79,7 @@
                     android:paddingBottom="20dp"
                     android:theme="@style/BlueBucket"
                     android:src="@drawable/ic_series_white_24dp"
-                    app:backgroundTint="@color/accent"
+                    app:backgroundTint="?bsAccentColor"
                     app:fabSize="mini"/>
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/fab_movies"
@@ -89,7 +89,7 @@
                     android:paddingBottom="20dp"
                     android:theme="@style/BlueBucket"
                     android:src="@drawable/ic_movie_white_24dp"
-                    app:backgroundTint="@color/accent"
+                    app:backgroundTint="?bsAccentColor"
                     app:fabSize="mini"/>
             </com.rafaelcarvalho.mybucketlist.util.FloatingActionButtonMenu>
         </android.support.design.widget.CoordinatorLayout>

@@ -2,18 +2,21 @@
 <resources>
     <!-- Base application theme. -->
     <style name="Base.AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
     </style>
 
+
+    <!--Blue Theme-->
     <style name="BlueBucket" parent="Base.AppTheme">
         <!-- enable window content transitions -->
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowBackground">@android:color/background_light</item>
-        <item name="android:colorPrimary">#2196F3</item>
-        <item name="android:colorPrimaryDark">#1976D2</item>
-        <item name="android:colorAccent">#FFC107</item>
-        <item name="android:textColorPrimary">#212121</item>
-        <item name="android:text">#FFFFFF</item>
+        <item name="android:colorPrimary">#3F51B5</item>
+        <item name="bsPrimaryColor">#3F51B5</item>
+        <item name="android:colorPrimaryDark">#303F9F</item>
+        <item name="bsPrimaryDarkColor">#303F9F</item>
+        <item name="android:colorAccent">#ffc107</item>
+        <item name="bsAccentColor">#ffc107</item>
+        <item name="android:textColorPrimary">@color/bright_foreground_inverse_material_light</item>
         <!-- specify enter and exit transitions -->
         <!-- options are: explode, slide, fade -->
         <item name="android:windowEnterTransition">@transition/slide</item>
@@ -27,13 +30,17 @@
             @transition/change_title_transform
         </item>
 
+        <item name="bsToolbarStyle">@style/BlueBucket.Toolbar</item>
+        <item name="bsPopUpStyle">@style/BlueBucket.PopUp</item>
+        <item name="bsTabLayoutStyle">@style/BlueBucket.TabLayout</item>
+        <item name="bsAppbarOverlayStyle">@style/BlueBucket.AppBarOverlay</item>
     </style>
 
     <style name="BlueBucket.TabLayout" parent="Widget.Design.TabLayout">
         <!-- enable window content transitions -->
-        <item name="tabIndicatorColor">@color/accent</item>
-        <item name="tabBackground">@color/primary</item>
-        <item name="tabSelectedTextColor">@color/accent</item>
+        <item name="tabIndicatorColor">?bsAccentColor</item>
+        <item name="tabBackground">?bsPrimaryColor</item>
+        <item name="tabSelectedTextColor">?bsAccentColor</item>
         <item name="tabTextAppearance">@style/BlueBucket.TabTextAppearance</item>
     </style>
 
@@ -43,17 +50,12 @@
         <item name="textAllCaps">true</item>
     </style>
 
-
     <style name="BlueBucket.Toolbar" parent="BlueBucket">
         <item name="android:actionBarWidgetTheme">@style/BlueBucket.Hint</item>
         <item name="android:textColorPrimary">#FFFFFF</item>
         <item name="android:textColorSecondary">#FFFFFF</item>
         <item name="android:textColorHint">#FFFFFF</item>
-    </style>
-
-    <style name="BlueBucket.Hint" parent="BlueBucket.Toolbar">
-        <item name="android:textColorHint">#FFFFFF</item>
-
+        <item name="android:background"> ?bsPrimaryColor</item>
     </style>
 
     <style name="BlueBucket.PopUp" parent="BlueBucket">
@@ -63,4 +65,71 @@
     <style name="BlueBucket.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="BlueBucket.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!--Orange Theme-->
+
+    <style name="OrangeBucket" parent="Base.AppTheme">
+        <!-- enable window content transitions -->
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowBackground">@android:color/background_light</item>
+        <item name="android:colorPrimary">@color/primary_orange</item>
+        <item name="bsPrimaryColor">@color/primary_orange</item>
+        <item name="android:colorPrimaryDark">@color/primary_orange_dark</item>
+        <item name="bsPrimaryDarkColor">@color/primary_orange_dark</item>
+        <item name="android:colorAccent">@color/accent_orange</item>
+        <item name="bsAccentColor">@color/accent_orange</item>
+        <item name="android:textColorPrimary">@color/bright_foreground_inverse_material_light</item>
+        <!-- specify enter and exit transitions -->
+        <!-- options are: explode, slide, fade -->
+        <item name="android:windowEnterTransition">@transition/slide</item>
+        <item name="android:windowExitTransition">@transition/slide</item>
+
+        <!-- specify shared element transitions -->
+        <item name="android:windowSharedElementEnterTransition">
+            @transition/change_title_transform
+        </item>
+        <item name="android:windowSharedElementExitTransition">
+            @transition/change_title_transform
+        </item>
+
+        <item name="bsToolbarStyle">@style/OrangeBucket.Toolbar</item>
+        <item name="bsPopUpStyle">@style/OrangeBucket.PopUp</item>
+        <item name="bsTabLayoutStyle">@style/OrangeBucket.TabLayout</item>
+        <item name="bsAppbarOverlayStyle">@style/OrangeBucket.AppBarOverlay</item>
+    </style>
+
+    <style name="OrangeBucket.TabLayout" parent="Widget.Design.TabLayout">
+        <!-- enable window content transitions -->
+        <item name="tabIndicatorColor">?bsAccentColor</item>
+        <item name="tabBackground">?bsPrimaryColor</item>
+        <item name="tabSelectedTextColor">?bsAccentColor</item>
+        <item name="tabTextAppearance">@style/OrangeBucket.TabTextAppearance</item>
+    </style>
+
+    <style name="OrangeBucket.TabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#FFF</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
+    <style name="OrangeBucket.Toolbar" parent="OrangeBucket">
+        <item name="android:actionBarWidgetTheme">@style/OrangeBucket.Hint</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:textColorSecondary">#FFFFFF</item>
+        <item name="android:textColorHint">#FFFFFF</item>
+        <item name="android:background"> ?bsPrimaryColor</item>
+    </style>
+
+    <style name="OrangeBucket.Hint" parent="OrangeBucket.Toolbar">
+        <item name="android:textColorHint">#FFFFFF</item>
+    </style>
+
+
+    <style name="OrangeBucket.PopUp" parent="OrangeBucket">
+        <item name="android:textColorPrimary">#212121</item>
+    </style>
+
+
+    <style name="OrangeBucket.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
 </resources>

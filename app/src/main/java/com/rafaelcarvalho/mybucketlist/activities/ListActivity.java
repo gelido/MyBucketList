@@ -2,12 +2,14 @@ package com.rafaelcarvalho.mybucketlist.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -87,7 +89,12 @@ public class ListActivity extends Activity implements View.OnClickListener, View
 
         //Instantiate the helper that is going to handle the intro and close animations
         mHoverLayout = (LinearLayout) findViewById(R.id.hover_layout);
-        mHoverLayout.setBackgroundColor(getResources().getColor(R.color.accent));
+        //get the accent color from the theme
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = getTheme();
+        theme.resolveAttribute(R.attr.bsAccentColor, typedValue, true);
+        int color = typedValue.data;
+        mHoverLayout.setBackgroundColor(color);
         mHoverLayout.setVisibility(View.INVISIBLE);
 
     }

@@ -1,8 +1,11 @@
 package com.rafaelcarvalho.mybucketlist.util;
 
+import android.text.Html;
 import android.util.Xml;
 
 import com.rafaelcarvalho.mybucketlist.gson.SimpleSearchGson;
+import com.rafaelcarvalho.mybucketlist.model.Book;
+import com.rafaelcarvalho.mybucketlist.model.BucketListItem;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -208,7 +211,7 @@ public class GoodReadsParser {
                 skip(parser);
             }
         }
-        return authorName;
+        return Html.fromHtml(authorName).toString();
 
     }
 
@@ -216,28 +219,28 @@ public class GoodReadsParser {
         parser.require(XmlPullParser.START_TAG, ns, "name");
         String name = readText(parser);
         parser.require(XmlPullParser.END_TAG, ns, "name");
-        return name;
+        return Html.fromHtml(name).toString();
     }
 
     private String readTitle(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, ns, "title");
         String title = readText(parser);
         parser.require(XmlPullParser.END_TAG, ns, "title");
-        return title;
+        return Html.fromHtml(title).toString();
     }
 
     private String readId(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, ns, "id");
         String title = readText(parser);
         parser.require(XmlPullParser.END_TAG, ns, "id");
-        return title;
+        return Html.fromHtml(title).toString();
     }
 
     private String readImageUrl(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, ns, "image_url");
         String title = readText(parser);
         parser.require(XmlPullParser.END_TAG, ns, "image_url");
-        return title;
+        return Html.fromHtml(title).toString();
     }
 
     private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
@@ -246,7 +249,147 @@ public class GoodReadsParser {
             result = parser.getText();
             parser.nextTag();
         }
-        return result;
+        return Html.fromHtml(result).toString();
     }
 
+
+    /**
+     * ############################################################################################
+     */
+
+
+    /**
+     * The XML goes like this
+     *
+     *<GoodreadsResponse>
+     *  <book>
+     *      <id></id>
+     *      <title>
+     *      </title>
+     *      <image_url></image_url>
+     *      <description></description>
+     *      <average_rating></average_rating>
+     *      <authors>
+     *          <author>
+     *              <name></name>
+     *          </author>
+     *      </authors>
+     *  </book>
+     *</GoodreadsResponse>
+     *
+     * @param in
+     * @return
+     * @throws XmlPullParserException
+     * @throws IOException
+     */
+    public BucketListItem parseShow(InputStream in) throws XmlPullParserException, IOException {
+        try {
+            XmlPullParser parser = Xml.newPullParser();
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            parser.setInput(in, null);
+            parser.nextTag();
+            return readShow(parser);
+        } finally {
+            in.close();
+        }
+    }
+
+    private BucketListItem readShow(XmlPullParser parser) throws IOException, XmlPullParserException {
+
+        BucketListItem book = new Book();
+
+        parser.require(XmlPullParser.START_TAG, ns, "GoodreadsResponse");
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            // Starts by looking for the entry tag
+            if (name.equals("book")) {
+                book = readBook(parser);
+            } else {
+                skip(parser);
+            }
+        }
+        return book;
+    }
+
+    private BucketListItem readBook(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, ns, "book");
+
+        String title = null;
+        String id = null;
+        String coverUrl = null;
+        String author = null;
+        String description = null;
+        float rating = 0;
+
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            if (name.equals("title")) {
+                title = readTitle(parser);
+            } else if (name.equals("id")) {
+                id = readId(parser);
+            } else if (name.equals("image_url")) {
+                coverUrl = readImageUrl(parser);
+            }else if(name.equals("authors")){
+                author = readAuthors(parser);
+            }else if(name.equals("description")){
+                description = readDescription(parser);
+            }else if(name.equals("average_rating")){
+                rating = readAverageRating(parser);
+            }
+            else {
+                skip(parser);
+            }
+        }
+
+        Book book = new Book(title,description,rating,coverUrl,id,false,author);
+
+        return book;
+    }
+
+    private float readAverageRating(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, ns, "average_rating");
+        String rating = readText(parser);
+        parser.require(XmlPullParser.END_TAG, ns, "average_rating");
+
+        try{
+            return Float.valueOf(rating)*2;
+        }catch (NumberFormatException exception) {
+            return 0;
+        }
+    }
+
+    private String readDescription(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, ns, "description");
+        String description = readText(parser);
+        parser.require(XmlPullParser.END_TAG, ns, "description");
+        return Html.fromHtml(description).toString();
+    }
+
+    private String readAuthors(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG,ns, "authors");
+
+        List<String> authors = new ArrayList<>();
+
+        while(parser.next() != XmlPullParser.END_TAG){
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+
+            String name = parser.getName();
+
+            if(name.equals("author")){
+                authors.add(readAuthor(parser));
+            }else{
+                skip(parser);
+            }
+        }
+
+        return AppResources.implode(", ", (String[]) authors.toArray(new String[authors.size()]));
+    }
 }

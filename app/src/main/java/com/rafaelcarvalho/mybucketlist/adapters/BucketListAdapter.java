@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.rafaelcarvalho.mybucketlist.Interfaces.OnListChangeListener;
 import com.rafaelcarvalho.mybucketlist.R;
 import com.rafaelcarvalho.mybucketlist.activities.DetailActivity;
+import com.rafaelcarvalho.mybucketlist.activities.TabbedListsActivity;
 import com.rafaelcarvalho.mybucketlist.model.BucketListItem;
 import com.rafaelcarvalho.mybucketlist.util.Modification;
 import com.squareup.picasso.Picasso;
@@ -50,7 +51,13 @@ public class BucketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.mContext = context;
         this.mResourcesItemLayout = resourcesItemLayout;
         this.mData = new ArrayList<>();
-        this.changeListener = listener;
+        if (listener == null){
+            this.changeListener = (TabbedListsActivity)
+                    mContext;
+        }else{
+            this.changeListener = listener;
+        }
+
         sortData(items);
         ColorMatrix matrix = new ColorMatrix();
         matrix.setSaturation(0);

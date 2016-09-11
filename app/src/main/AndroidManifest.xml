@@ -9,32 +9,21 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/BlueBucket">
-        <!--<activity-->
-            <!--android:name=".activities.ListActivity"-->
-            <!--android:configChanges="keyboardHidden|orientation|screenSize"-->
-            <!--android:label="@string/app_name">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
         <activity
             android:name=".activities.DetailActivity"
             android:label="@string/title_activity_detail"
-            android:parentActivityName=".activities.ListActivity">
+            android:parentActivityName=".activities.TabbedListsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.rafaelcarvalho.mybucketlist.activities.ListActivity" />
+                android:value="com.rafaelcarvalho.mybucketlist.activities.TabbedListsActivity" />
         </activity>
         <activity
             android:name=".activities.SearchActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:parentActivityName=".activities.ListActivity"
-            android:theme="@style/BlueBucket">
+            android:parentActivityName=".activities.TabbedListsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.rafaelcarvalho.mybucketlist.activities.ListActivity" />
+                android:value="com.rafaelcarvalho.mybucketlist.activities.TabbedListsActivity" />
         </activity>
         <activity
             android:name=".activities.TabbedListsActivity"
@@ -44,6 +33,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".activities.TabbedListsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.rafaelcarvalho.mybucketlist.activities.TabbedListsActivity" />
         </activity>
     </application>
 
