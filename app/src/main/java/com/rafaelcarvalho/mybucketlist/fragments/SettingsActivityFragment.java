@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.rafaelcarvalho.mybucketlist.R;
+import com.rafaelcarvalho.mybucketlist.activities.SettingsActivity;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -83,10 +84,12 @@ public class SettingsActivityFragment extends PreferenceFragment implements Shar
                     color = getResources().getString(R.string.choose_color_summary);
             }
             mColorPreference.setSummary(color);
-
+            getActivity().getIntent().putExtra(SettingsActivity.IS_MODIFIED, true);
             if(!this.mOldValue.equals(newValue)){
                 getActivity().recreate();
             }
         }
     }
+
+
 }

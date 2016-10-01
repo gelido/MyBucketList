@@ -36,8 +36,6 @@ public class TabbedListsActivity extends AppCompatActivity
         implements BucketListFragment.OnFragmentInteractionListener,View.OnClickListener,
         OnListChangeListener{
 
-    private static final String PREFS_NAME = "prefs";
-    private static final String PREF_ORANGE_THEME = "OrangeTheme";
     private ViewPager mViewPager;
 
     private int mThemeId = -1;
@@ -129,6 +127,12 @@ public class TabbedListsActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        applyChanges();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
@@ -142,7 +146,7 @@ public class TabbedListsActivity extends AppCompatActivity
 //
 //                startActivity(intent);
                 Intent intent = new Intent(this,SettingsActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, SettingsActivity.SETTINGS_CHANGE);
                 return true;
 
             default:
@@ -200,6 +204,11 @@ public class TabbedListsActivity extends AppCompatActivity
 
                     task.execute(data.getIntExtra(SearchActivity.ITEM_TYPE,-1));
                 }
+            }
+            else if(requestCode == SettingsActivity.SETTINGS_CHANGE)
+            {
+                if (data.getBooleanExtra(SearchActivity.IS_MODIFIED, true))
+                    recreate();
             }
         }
     }

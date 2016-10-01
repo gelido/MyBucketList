@@ -1,5 +1,6 @@
 package com.rafaelcarvalho.mybucketlist.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -21,6 +22,9 @@ import com.rafaelcarvalho.mybucketlist.R;
 import com.rafaelcarvalho.mybucketlist.fragments.SettingsActivityFragment;
 
 public class SettingsActivity extends AppCompatActivity {
+
+    public static final int SETTINGS_CHANGE = 11;
+    public static final String IS_MODIFIED = "Modified";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,4 +79,13 @@ public class SettingsActivity extends AppCompatActivity {
 
         return null;
     }
+
+
+    @Override
+    public void onBackPressed() {
+        setResult(Activity.RESULT_OK, getIntent());
+        finish();
+    }
+
+
 }

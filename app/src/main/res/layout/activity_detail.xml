@@ -20,7 +20,7 @@
             android:id="@+id/appBarLayout"
             android:layout_height="@dimen/detail_backdrop_height"
             android:layout_width="match_parent"
-            android:theme="?bsAppbarOverlayStyle">
+            android:theme="@style/ParallaxAppBarLayout">
 
             <android.support.design.widget.CollapsingToolbarLayout
                 android:layout_width="match_parent"
@@ -42,8 +42,7 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    app:popupTheme="?bsPopUpStyle"
-                    app:layout_collapseMode="none" />
+                    app:layout_collapseMode="pin" />
             </android.support.design.widget.CollapsingToolbarLayout>
 
         </android.support.design.widget.AppBarLayout>

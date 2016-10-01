@@ -9,17 +9,12 @@
         <!-- enable window content transitions -->
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowBackground">@android:color/background_light</item>
-        <item name="android:colorPrimary">@color/primary_blue</item>
+        <item name="colorPrimary">@color/primary_blue</item>
         <item name="bsPrimaryColor">@color/primary_blue</item>
-        <item name="android:colorPrimaryDark">@color/primary_blue_dark</item>
+        <item name="colorPrimaryDark">@color/primary_blue_dark</item>
         <item name="bsPrimaryDarkColor">@color/primary_blue_dark</item>
-        <item name="android:colorAccent">@color/accent_blue</item>
+        <item name="colorAccent">@color/accent_blue</item>
         <item name="bsAccentColor">@color/accent_blue</item>
-
-
-        <item name="android:colorControlNormal">@color/accent_blue</item>
-        <item name="android:colorControlHighlight">@color/accent_blue</item>
-        <item name="android:colorControlActivated">@color/accent_blue</item>
 
         <!-- specify enter and exit transitions -->
         <!-- options are: explode, slide, fade -->
@@ -38,6 +33,7 @@
         <item name="bsPopUpStyle">@style/BlueBucket.PopUp</item>
         <item name="bsTabLayoutStyle">@style/BlueBucket.TabLayout</item>
         <item name="bsAppbarOverlayStyle">@style/BlueBucket.AppBarOverlay</item>
+        <!--<item name="bsSwitchStyle">@style/BlueBucket.SwitchStyle</item>-->
 
     </style>
 
@@ -68,11 +64,17 @@
         <item name="android:textColorHint">#FFFFFF</item>
     </style>
 
+    <style name="BlueBucket.SwitchStyle" parent="BlueBucket">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">?bsAccentColor</item>
+    </style>
+
     <style name="BlueBucket.PopUp" parent="BlueBucket">
         <item name="android:textColorPrimary">#212121</item>
     </style>
 
-    <style name="BlueBucket.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="BlueBucket.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    </style>
 
     <style name="BlueBucket.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
@@ -82,11 +84,11 @@
         <!-- enable window content transitions -->
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowBackground">@android:color/background_light</item>
-        <item name="android:colorPrimary">@color/primary_orange</item>
+        <item name="colorPrimary">@color/primary_orange</item>
         <item name="bsPrimaryColor">@color/primary_orange</item>
-        <item name="android:colorPrimaryDark">@color/primary_orange_dark</item>
+        <item name="colorPrimaryDark">@color/primary_orange_dark</item>
         <item name="bsPrimaryDarkColor">@color/primary_orange_dark</item>
-        <item name="android:colorAccent">@color/accent_orange</item>
+        <item name="colorAccent">@color/accent_orange</item>
         <item name="bsAccentColor">@color/accent_orange</item>
         <!-- specify enter and exit transitions -->
         <!-- options are: explode, slide, fade -->
@@ -105,6 +107,8 @@
         <item name="bsPopUpStyle">@style/OrangeBucket.PopUp</item>
         <item name="bsTabLayoutStyle">@style/OrangeBucket.TabLayout</item>
         <item name="bsAppbarOverlayStyle">@style/OrangeBucket.AppBarOverlay</item>
+        <!--<item name="bsSwitchStyle">@style/OrangeBucket.SwitchStyle</item>-->
+
     </style>
 
     <style name="OrangeBucket.TabLayout" parent="Widget.Design.TabLayout">
@@ -131,12 +135,19 @@
         <item name="android:textColorHint">#FFFFFF</item>
     </style>
 
+    <style name="OrangeBucket.SwitchStyle" parent="OrangeBucket">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">?bsAccentColor</item>
+    </style>
 
     <style name="OrangeBucket.PopUp" parent="OrangeBucket">
         <item name="android:textColorPrimary">#212121</item>
     </style>
 
-
-    <style name="OrangeBucket.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="ParallaxAppBarLayout" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:backgroundTint"> @color/cardview_light_background</item>
+    </style>
+    <style name="OrangeBucket.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    </style>
 
 </resources>

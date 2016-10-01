@@ -5,6 +5,7 @@
     <attr name="bsToolbarStyle" format="reference" />
     <attr name="bsAppbarOverlayStyle" format="reference" />
     <attr name="bsTabLayoutStyle" format="reference" />
+    <attr name="bsSwitchStyle" format="reference"/>
     <attr name="bsPrimaryColor" format="color"/>
     <attr name="bsAccentColor" format="color"/>
     <attr name="bsPrimaryDarkColor" format="color"/>

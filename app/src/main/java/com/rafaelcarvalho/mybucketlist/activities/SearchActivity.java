@@ -353,6 +353,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         finish();
     }
 
+
+
     @Override
     public boolean onQueryTextSubmit(String query) {
         mItemSearcher.search(query, new SearchFinishedCallback<SimpleSearchGson.SearchItem>() {

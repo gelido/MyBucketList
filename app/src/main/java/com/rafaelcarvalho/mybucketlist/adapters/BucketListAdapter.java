@@ -62,6 +62,8 @@ public class BucketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ColorMatrix matrix = new ColorMatrix();
         matrix.setSaturation(0);
         mGrayScale= new ColorMatrixColorFilter(matrix);
+
+
     }
 
     private void sortData(List<BucketListItem> items) {
@@ -114,7 +116,12 @@ public class BucketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 sortData(mData);
                 int newPosition = mData.indexOf(item);
-                notifyItemMoved(viewHolder.getAdapterPosition(),newPosition);
+                int oldPosition = viewHolder.getAdapterPosition();
+                notifyItemMoved(oldPosition,newPosition);
+
+                //Updates the itemHolders of the views moved
+                notifyItemRangeChanged(oldPosition>newPosition?newPosition:oldPosition
+                        , Math.abs(oldPosition-newPosition)+1);
 
                 //To avoid constant DB access instead of adding to the DB every time we change, we'll
                 // add it to a list that does everything in one go
@@ -165,6 +172,7 @@ public class BucketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         detailIntent.putExtra(DetailActivity.DESCRIPTION, item.getDescription());
         detailIntent.putExtra(DetailActivity.RATING, item.getRating());
 
+        //Create a pair so the animation knows where to go.
         Pair<View,String> pair3 = new Pair<View, String>(v.findViewById(R.id.iv_cover_item)
                 ,uniqueCoverTransitionName);
 
