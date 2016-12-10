@@ -88,4 +88,7 @@
     <string name="preferences">Preferences</string>
     <string name="title">Title</string>
     <string name="year">Year</string>
+    <string name="cover_image">Cover Image</string>
+    <string name="empty_list">The list is Empty</string>
+    <string name="unable_fetch_item">Unable to fetch item \'%1$s\'.</string>
 </resources>

@@ -54,14 +54,20 @@ public class DetailActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(getIntent().getStringExtra(TITLE));
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbar);
-        mCollapsingToolbar.setTitle(getIntent().getStringExtra(TITLE));
+
+        if(mCollapsingToolbar != null) {
+            mCollapsingToolbar.setTitle(getIntent().getStringExtra(TITLE));
+        }
+
 
 
         mCover = (ImageView) findViewById(R.id.iv_cover);

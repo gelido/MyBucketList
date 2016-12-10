@@ -1,5 +1,7 @@
 package com.rafaelcarvalho.mybucketlist.Interfaces;
 
+import android.content.Context;
+
 import com.rafaelcarvalho.mybucketlist.model.BucketListItem;
 
 /**

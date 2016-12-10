@@ -88,6 +88,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void addItem(BucketListItem item){
+        Log.d("DATABASE", "ADDED " + item.getTitle());
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();

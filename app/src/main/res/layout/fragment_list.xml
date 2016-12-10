@@ -12,4 +12,14 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/empty_list"
+        android:id="@+id/tv_empty"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:gravity="center_vertical|center_horizontal" />
+
 </FrameLayout>

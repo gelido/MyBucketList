@@ -67,7 +67,8 @@ public class BucketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private void sortData(List<BucketListItem> items) {
-        mData = items;
+        mData.clear();
+        mData.addAll(items);
         Collections.sort(mData, mItemComparator);
     }
 
@@ -114,12 +115,14 @@ public class BucketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     item.setSeen(false);
                 }
 
-                sortData(mData);
+                Collections.sort(mData, mItemComparator); //Put new order.
+
+
                 int newPosition = mData.indexOf(item);
                 int oldPosition = viewHolder.getAdapterPosition();
                 notifyItemMoved(oldPosition,newPosition);
 
-                //Updates the itemHolders of the views moved
+                //Updates the itemHolders of the views moved, since the notifyItemMoved is visual only
                 notifyItemRangeChanged(oldPosition>newPosition?newPosition:oldPosition
                         , Math.abs(oldPosition-newPosition)+1);
 
@@ -188,7 +191,6 @@ public class BucketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void setData(List<BucketListItem> mData) {
-        this.mData = mData;
         sortData(mData);
     }
 

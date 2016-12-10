@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -15,6 +14,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,6 +52,7 @@ public class TabbedListsActivity extends AppCompatActivity
     //Handlers and Helpers
     private DatabaseHandler mDatabaseHandler;
 
+    private Bundle mFragmentBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +76,9 @@ public class TabbedListsActivity extends AppCompatActivity
         setContentView(R.layout.activity_tabbed_lists);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mFragmentBundle = new Bundle();
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         /*
@@ -167,13 +171,9 @@ public class TabbedListsActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         if(resultCode == RESULT_OK){
             if(requestCode == ADD_ITEM){
-
-                //TODO: so you don't lose the train of though, when this reaches here, supposedly the
-                // added item is already on the DB (and hopefully on the AppResources), so here we should just
-                // need to update the list with what's on the Singleton
 
                 if (data.getBooleanExtra(SearchActivity.IS_MODIFIED, true)) {
 
@@ -187,13 +187,14 @@ public class TabbedListsActivity extends AppCompatActivity
                         @Override
                         protected List<BucketListItem> doInBackground(Integer ... params) {
                             BucketListItemType type = BucketListItemType.values()[params[0]];
-
                             return mDatabaseHandler.getAllFromType(type);
                         }
 
 
                                 @Override
                                 protected void onPostExecute(List<BucketListItem> items) {
+                                    //TODO: You need to make sure this only gets called after the search activity actually puts something on the DB
+                                    // sometimes this list doesn't contain the new element.
                                     for (Fragment fragment: getSupportFragmentManager().getFragments()){
                                         if(((BucketListFragment) fragment).getType() == type){
                                             ((BucketListFragment) fragment).updateList(items);
@@ -221,8 +222,6 @@ public class TabbedListsActivity extends AppCompatActivity
 
     @Override
     public void applyChanges() {
-
-
         //Save to DB in background
         new AsyncTask<Void,Void,Void>() {
             @Override
@@ -261,7 +260,8 @@ public class TabbedListsActivity extends AppCompatActivity
 
             BucketListItemType type = BucketListItemType.values()[position];
             List<BucketListItem> items = mDatabaseHandler.getAllFromType(type);
-            return BucketListFragment.newInstance(items,type, TabbedListsActivity.this);
+            Fragment fragment = BucketListFragment.newInstance(items,type, TabbedListsActivity.this);
+            return fragment;
         }
 
         @Override

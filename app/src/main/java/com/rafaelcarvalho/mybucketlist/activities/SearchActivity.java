@@ -2,6 +2,7 @@ package com.rafaelcarvalho.mybucketlist.activities;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
@@ -18,6 +19,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,12 +28,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rafaelcarvalho.mybucketlist.Interfaces.AddItemHandler;
 import com.rafaelcarvalho.mybucketlist.Interfaces.DetailFetcher;
 import com.rafaelcarvalho.mybucketlist.Interfaces.DetailFetcherCallback;
 import com.rafaelcarvalho.mybucketlist.Interfaces.ErrorCallback;
 import com.rafaelcarvalho.mybucketlist.Interfaces.ItemSearcher;
+import com.rafaelcarvalho.mybucketlist.Interfaces.OnListChangeListener;
 import com.rafaelcarvalho.mybucketlist.Interfaces.SearchFinishedCallback;
 import com.rafaelcarvalho.mybucketlist.R;
 import com.rafaelcarvalho.mybucketlist.adapters.SearchResultAdapter;
@@ -69,6 +73,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     private DatabaseHandler mDatabaseHandler;
     private CoordinatorLayout mCoordinatorLayout;
     private int mResourceLayout;
+    private boolean hasFinished = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,6 +174,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             mSearchResultView.setAdapter(mAdapter);
         }
 
+        getIntent().putExtra(IS_MODIFIED, false);
 
         //Change the Searcher depending on the type clicked
         switch(mItemType){
@@ -242,22 +248,30 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                             public void run() {
                                 progressBar.setVisibility(View.INVISIBLE);
                                 acceptButton.setVisibility(View.VISIBLE);
+                                //Snackback that can undo the remove
                             }
                         });
 
+                        if (!hasFinished) {
+                            getIntent().putExtra(IS_MODIFIED, true);
+                            //Remove the item from the list, this is purely visual
+                            //the method returns the one removed so we can undo
+                            final SimpleSearchGson.SearchItem searchItem =
+                                    removeFromList(viewHolder.getAdapterPosition());
+                            updateListVisibility();
+                            mDatabaseHandler.addItem(item);
 
-                        getIntent().putExtra(IS_MODIFIED, true);
+                            showSnackBarAdded(mCoordinatorLayout,item, searchItem, position);
+                        } else {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(),
+                                            getString(R.string.unable_fetch_item,item.getTitle()), Toast.LENGTH_SHORT).show();
+                                }
+                            });
 
-                        //Remove the item from the list, this is purely visual
-                        //the method returns the one removed so we can undo
-                        SimpleSearchGson.SearchItem searchItem =
-                                removeFromList(viewHolder.getAdapterPosition());
-                        updateListVisibility();
-                        mDatabaseHandler.addItem(item);
-
-
-                        //Snackback that can undo the remove
-                        showSnackBarAdded(item, searchItem, position);
+                        }
                     }
                 }, new ErrorCallback() {
                     @Override
@@ -274,10 +288,11 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                 });
     }
 
-    private void showSnackBarAdded(final BucketListItem item, final SimpleSearchGson.SearchItem searchItem,
+
+    private void showSnackBarAdded(View view, final BucketListItem item, final SimpleSearchGson.SearchItem searchItem,
                                    final int position) {
         int color = AppResources.getFromAttrTheme(this,R.attr.bsAccentColor);
-        Snackbar snackbar = Snackbar.make(mCoordinatorLayout, getString(R.string.succes_item_added),
+        Snackbar snackbar = Snackbar.make(view, getString(R.string.succes_item_added),
                             Snackbar.LENGTH_LONG).setAction(getString(R.string.btn_undo),
                                 new View.OnClickListener() {
                                     @Override
@@ -286,7 +301,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                                         mAdapter.add(position,searchItem);
 
                                         mAdapter.notifyDataSetChanged();
-                                        getIntent().putExtra(IS_MODIFIED, false);
                                     }
                                 }).setCallback(new Snackbar.Callback() {
                                     @Override
@@ -349,7 +363,9 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             }
         }
 
-        setResult(Activity.RESULT_OK, getIntent());
+        Intent i = new Intent(getIntent());
+        setResult(Activity.RESULT_OK, i);
+        hasFinished = true;
         finish();
     }
 
@@ -396,6 +412,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         return unique;
     }
 
+
+
     @Override
     public boolean onQueryTextChange(String newText) {
         return false;
@@ -434,26 +452,28 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     }
 
     public void startActivityWithAnimation(View clickedView,int position, BucketListItem result) {
-        Intent detailIntent = new Intent(this, DetailActivity.class);
-        String uniqueCoverTransitionName = "coverTransition" + position;
+        if (!hasFinished) {
+            Intent detailIntent = new Intent(this, DetailActivity.class);
+            String uniqueCoverTransitionName = "coverTransition" + position;
 
-        //Animation information
-        detailIntent.putExtra(DetailActivity.COVER_TRANSITION, uniqueCoverTransitionName);
+            //Animation information
+            detailIntent.putExtra(DetailActivity.COVER_TRANSITION, uniqueCoverTransitionName);
 
-        //Send data
-        detailIntent.putExtra(DetailActivity.TITLE, result.getTitle());
-        detailIntent.putExtra(DetailActivity.COVER, result.getCover());
-        detailIntent.putExtra(DetailActivity.DESCRIPTION, result.getDescription());
-        detailIntent.putExtra(DetailActivity.RATING, result.getRating());
-        detailIntent.putExtra(DetailActivity.SEARCH,true);
+            //Send data
+            detailIntent.putExtra(DetailActivity.TITLE, result.getTitle());
+            detailIntent.putExtra(DetailActivity.COVER, result.getCover());
+            detailIntent.putExtra(DetailActivity.DESCRIPTION, result.getDescription());
+            detailIntent.putExtra(DetailActivity.RATING, result.getRating());
+            detailIntent.putExtra(DetailActivity.SEARCH,true);
 
-        Pair<View,String> pair3 = new Pair<View, String>(clickedView.findViewById(R.id.iv_cover)
-                ,uniqueCoverTransitionName);
+            Pair<View,String> pair3 = new Pair<View, String>(clickedView.findViewById(R.id.iv_cover)
+                    ,uniqueCoverTransitionName);
 
-        //Start activity with the shared elements
-        ActivityOptions options = ActivityOptions
-                .makeSceneTransitionAnimation(this, pair3);
+            //Start activity with the shared elements
+            ActivityOptions options = ActivityOptions
+                    .makeSceneTransitionAnimation(this, pair3);
 
-        startActivity(detailIntent, options.toBundle());
+            startActivity(detailIntent, options.toBundle());
+        }
     }
 }

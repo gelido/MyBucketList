@@ -187,6 +187,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-
-
+    public DetailFetcher getFetcher() {
+        return mFetcher;
+    }
 }

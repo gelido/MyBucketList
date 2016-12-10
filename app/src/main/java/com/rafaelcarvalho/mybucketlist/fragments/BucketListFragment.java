@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.TextView;
 
 import com.rafaelcarvalho.mybucketlist.Interfaces.OnListChangeListener;
 import com.rafaelcarvalho.mybucketlist.R;
@@ -43,7 +44,7 @@ public class BucketListFragment extends Fragment{
 
     private BucketListItemType mType;
     private OnListChangeListener mChangeListener;
-
+    private TextView mTxtEmpty;
 
 
     public BucketListFragment() {
@@ -70,7 +71,6 @@ public class BucketListFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         List<BucketListItem> items;
         if (getArguments() != null) {
              items = getArguments().getParcelableArrayList(ARG_ITEMS);
@@ -88,11 +88,26 @@ public class BucketListFragment extends Fragment{
 
 
         mBucketListView = (RecyclerView) root.findViewById(R.id.rv_bucketlist);
+
+        mTxtEmpty = (TextView) root.findViewById(R.id.tv_empty);
+
         //This is needed, can't remember why though
         mBucketListView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mBucketListView.setAdapter(mAdapter);
 
+        alterVisibility();
         return root;
+    }
+
+    private void alterVisibility() {
+        //If the search shows nothing we put a placeholder instead of an empty list
+        if (mAdapter.getItemCount() > 0) {
+            mBucketListView.setVisibility(View.VISIBLE);
+            mTxtEmpty.setVisibility(View.GONE);
+        } else {
+            mBucketListView.setVisibility(View.GONE);
+            mTxtEmpty.setVisibility(View.VISIBLE);
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -151,9 +166,10 @@ public class BucketListFragment extends Fragment{
         this.mChangeListener = mChangeListener;
     }
 
-    public void
-    updateList(List<BucketListItem> items){
-        ((BucketListAdapter) mBucketListView.getAdapter()).setData(items);
-        mBucketListView.getAdapter().notifyDataSetChanged();
+    public void updateList(List<BucketListItem> items){
+        mAdapter.setData(items);
+        alterVisibility();
+        mAdapter.notifyDataSetChanged();
     }
+
 }

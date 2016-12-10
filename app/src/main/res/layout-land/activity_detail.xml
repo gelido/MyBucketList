@@ -14,43 +14,21 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/main_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:layout_height="match_parent">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appBarLayout"
-            android:layout_height="@dimen/detail_backdrop_height_land"
             android:layout_width="match_parent"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:fitsSystemWindows="true">
+            android:layout_height="wrap_content"
+            android:theme="?bsAppbarOverlayStyle">
 
-            <android.support.design.widget.CollapsingToolbarLayout
+            <android.support.v7.widget.Toolbar
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                android:fitsSystemWindows="true"
-                app:contentScrim="?attr/colorPrimary"
-
-                app:expandedTitleMarginStart="48dp"
-                app:expandedTitleMarginEnd="64dp">
-
-                <ImageView
-                    android:id="@+id/iv_cover"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fitsSystemWindows="true"
-
-                    android:transitionName="coverTransition"
-                    app:layout_collapseMode="parallax"/>
-
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-
-                    app:layout_collapseMode="pin" />
-            </android.support.design.widget.CollapsingToolbarLayout>
+                android:id="@+id/toolbar"
+                android:layout_height="?attr/actionBarSize"
+                style="?bsToolbarStyle"
+                app:popupTheme="?bsPopUpStyle"
+                app:layout_scrollFlags="scroll|enterAlways"/>
 
         </android.support.design.widget.AppBarLayout>
 
@@ -59,46 +37,58 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="100">
+                <ImageView
+                    android:id="@+id/iv_cover"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:transitionName="coverTransition"
+                    android:contentDescription="@string/cover_image"
+                    />
 
-
-                <android.support.v7.widget.CardView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/cv_title"
-                    android:transitionName="cardTitleTransition"
-                    android:elevation="0dp"
+                    android:orientation="vertical">
 
-                    >
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_margin="16dp"
+                        android:elegantTextHeight="true"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="-"
+                        android:id="@+id/tv_description"
+                        android:layout_gravity="center"
+                        android:layout_weight="1.45" />
+                    <RatingBar
+                        style="?android:attr/ratingBarStyleIndicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:isIndicator="true"
+                        android:id="@+id/ratingBar"
+                        android:numStars="10"
+                        android:rating="0"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="Title"
-                        android:id="@+id/tv_title_detail"
-                        android:layout_gravity="center_horizontal"
+                        android:text="@string/title"
+                        android:id="@+id/tv_rating_number"
+                        android:layout_gravity="center"
                         android:padding="7dp"
                         android:layout_margin="20dp"
+                        android:layout_weight="1"
                         />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Lorem ipsum dolor sit amet, eu nam probo sonet, sed nonumy minimum perpetua te, ius an exerci copiosae. Magna eleifend ut eam, mea no case laoreet, viris voluptua te vix. Qui solet aliquid an, vim ne enim docendi. Eu adhuc essent possim sea, patrioque sententiae scripserit vel te.
 
-An recusabo efficiantur mea, et saepe commodo omittam vel. Ei mea mollis recusabo, in nibh consequuntur ius. Vel tation impedit reprimique at. Duo ea hinc impedit menandri, te nec cibo omittantur. Vim eros audire an, pro te inimicus appellantur accommodare. Ei enim voluptatibus pri.
-
-Aperiri dignissim quo ex. Ei semper offendit vix, augue eirmod menandri in has. Et sed alii graecis, per nibh omnesque deseruisse ea, soleat partiendo ei sea. Est liber inimicus an. Oratio salutatus moderatius his cu, ipsum quando iudicabit an est."
-                        android:id="@+id/tv_description"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_weight="1.45" />
-                    </LinearLayout>
-                </android.support.v7.widget.CardView>
+                </LinearLayout>
+            </LinearLayout>
 
         </android.support.v4.widget.NestedScrollView>
     </android.support.design.widget.CoordinatorLayout>
