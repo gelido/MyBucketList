@@ -150,7 +150,7 @@ public class ListActivity extends Activity implements View.OnClickListener, View
 
     private void handleAddClickTo(BucketListItemType type, final View source) {
         final Intent searchIntent = new Intent(this, SearchActivity.class);
-        searchIntent.putExtra(SearchActivity.ITEM_TYPE, type.ordinal());
+        searchIntent.putExtra(TabbedListsActivity.ITEM_TYPE, type.ordinal());
 
         //Get the center of the FAButton clicked, so the animation knows where to start
         float x = source.getX() +(source.getWidth()/2);

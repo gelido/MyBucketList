@@ -1,21 +1,27 @@
 package com.rafaelcarvalho.mybucketlist.activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.rafaelcarvalho.mybucketlist.R;
+import com.rafaelcarvalho.mybucketlist.database.DatabaseHandler;
 import com.rafaelcarvalho.mybucketlist.fragments.SettingsActivityFragment;
+import com.rafaelcarvalho.mybucketlist.model.BucketListItem;
 import com.rafaelcarvalho.mybucketlist.util.AppResources;
 import com.squareup.picasso.Picasso;
 
@@ -27,12 +33,17 @@ public class DetailActivity extends AppCompatActivity {
     public static final String RATING = "rating";
     public static final String COVER_TRANSITION = "coverTransition";
     public static final String SEARCH = "search";
+    public static final String ITEM_ID = "itemId";
+    public static final String ITEM_TYPE = "itemType";
+    public static final String IS_DELETED = DetailActivity.class.getSimpleName()+ "Deleted";
+
 
     private TextView mTxtRating;
     private TextView mTxtDescription;
     private ImageView mCover;
     private CollapsingToolbarLayout mCollapsingToolbar;
     private RatingBar mRatingBar;
+    private DatabaseHandler mDatabaseHandler;
 
 
     @Override
@@ -68,7 +79,7 @@ public class DetailActivity extends AppCompatActivity {
             mCollapsingToolbar.setTitle(getIntent().getStringExtra(TITLE));
         }
 
-
+        mDatabaseHandler = DatabaseHandler.getDatabaseReference(this);
 
         mCover = (ImageView) findViewById(R.id.iv_cover);
         Picasso.with(this).load(getIntent().getStringExtra(COVER)).into(mCover);
@@ -117,8 +128,11 @@ public class DetailActivity extends AppCompatActivity {
             case R.id.action_add:
                 //TODO: Finish this method
                 return true;
+            case R.id.action_remove:
+                removeFromDBAndFinish();
+                return true;
             case android.R.id.home:
-                finishAfterTransition();
+                finishWithResult();
                 return true;
         }
 
@@ -126,5 +140,42 @@ public class DetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void removeFromDBAndFinish() {
+        String id = getIntent().getStringExtra(ITEM_ID);
+        BucketListItem item = mDatabaseHandler.remove(id);
+        getIntent().putExtra(IS_DELETED, true);
+        showSnackBarAdded(mCollapsingToolbar, item);
+    }
 
+    private void showSnackBarAdded(View view, final BucketListItem item) {
+        int color = AppResources.getFromAttrTheme(this,R.attr.bsAccentColor);
+        Snackbar snackbar = Snackbar.make(view, R.string.success_item_remove,
+                Snackbar.LENGTH_LONG).setAction(getString(R.string.btn_undo),
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mDatabaseHandler.addItem(item);
+                        getIntent().putExtra(IS_DELETED, false);
+                    }
+                }).setCallback(new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                if(event != DISMISS_EVENT_ACTION){
+                    finishWithResult();
+                }
+            }
+        }).setActionTextColor(color);
+        snackbar.show();
+    }
+
+    private void finishWithResult() {
+        Intent i = new Intent(getIntent());
+        setResult(Activity.RESULT_OK, i);
+        finishAfterTransition();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finishWithResult();
+    }
 }

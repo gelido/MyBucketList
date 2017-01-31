@@ -1,6 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.rafaelcarvalho.mybucketlist.activities.DetailActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" android:showAsAction="never" />
+    <item android:id="@+id/action_remove" android:title="@string/action_remove"
+        android:icon="@drawable/ic_action_remove"
+        android:orderInCategory="2" app:showAsAction="always" />
 </menu>

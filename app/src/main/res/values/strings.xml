@@ -91,4 +91,6 @@
     <string name="cover_image">Cover Image</string>
     <string name="empty_list">The list is Empty</string>
     <string name="unable_fetch_item">Unable to fetch item \'%1$s\'.</string>
+    <string name="action_remove">remove</string>
+    <string name="success_item_remove">Item successfully removed</string>
 </resources>

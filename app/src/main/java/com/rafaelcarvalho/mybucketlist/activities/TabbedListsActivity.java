@@ -14,7 +14,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,9 +40,10 @@ public class TabbedListsActivity extends AppCompatActivity
     private int mThemeId = -1;
 
     //CONSTANTS
-    private static final int ADD_ITEM = 1;
-
-
+    public static final int ADD_ITEM = 1;
+    public static final int ITEM_DETAIL = 2;
+    public static final int SETTINGS_CHANGE = 3;
+    public static final String ITEM_TYPE = "ItemType";
     //It's a Hashmap so we can make sure the same field got only the last change
     private HashMap<Modification.Field,Modification> mModifications = new HashMap<>();
 
@@ -150,7 +150,7 @@ public class TabbedListsActivity extends AppCompatActivity
 //
 //                startActivity(intent);
                 Intent intent = new Intent(this,SettingsActivity.class);
-                startActivityForResult(intent, SettingsActivity.SETTINGS_CHANGE);
+                startActivityForResult(intent, SETTINGS_CHANGE);
                 return true;
 
             default:
@@ -166,7 +166,7 @@ public class TabbedListsActivity extends AppCompatActivity
     @Override
     public void onClick(View source) {
         final Intent searchIntent = new Intent(this, SearchActivity.class);
-        searchIntent.putExtra(SearchActivity.ITEM_TYPE, mTabLayout.getSelectedTabPosition());
+        searchIntent.putExtra(ITEM_TYPE, mTabLayout.getSelectedTabPosition());
         startActivityForResult(searchIntent, ADD_ITEM);
     }
 
@@ -177,41 +177,50 @@ public class TabbedListsActivity extends AppCompatActivity
 
                 if (data.getBooleanExtra(SearchActivity.IS_MODIFIED, true)) {
 
-                    final BucketListItemType type = BucketListItemType
-                            .values()[data.getIntExtra(SearchActivity.ITEM_TYPE,-1)];
-
-
-                    //fetches the info from the DB on another thread depending on the type sent
-                    AsyncTask<Integer,Void, List<BucketListItem>> task =
-                            new AsyncTask<Integer, Void, List<BucketListItem>>() {
-                        @Override
-                        protected List<BucketListItem> doInBackground(Integer ... params) {
-                            BucketListItemType type = BucketListItemType.values()[params[0]];
-                            return mDatabaseHandler.getAllFromType(type);
-                        }
-
-
-                                @Override
-                                protected void onPostExecute(List<BucketListItem> items) {
-                                    //TODO: You need to make sure this only gets called after the search activity actually puts something on the DB
-                                    // sometimes this list doesn't contain the new element.
-                                    for (Fragment fragment: getSupportFragmentManager().getFragments()){
-                                        if(((BucketListFragment) fragment).getType() == type){
-                                            ((BucketListFragment) fragment).updateList(items);
-                                        }
-                                    }
-                                }
-                            };
-
-                    task.execute(data.getIntExtra(SearchActivity.ITEM_TYPE,-1));
+                    BucketListItemType type = BucketListItemType
+                            .values()[data.getIntExtra(ITEM_TYPE,-1)];
+                    refreshBy(type);
                 }
             }
-            else if(requestCode == SettingsActivity.SETTINGS_CHANGE)
+            else if(requestCode == SETTINGS_CHANGE)
             {
-                if (data.getBooleanExtra(SearchActivity.IS_MODIFIED, true))
+                if (data.getBooleanExtra(SearchActivity.IS_MODIFIED, true)) {
                     recreate();
+                }
+            }else if(requestCode == ITEM_DETAIL){
+                if(data.getBooleanExtra(DetailActivity.IS_DELETED, false)){
+                    BucketListItemType type = BucketListItemType
+                            .values()[data.getIntExtra(ITEM_TYPE,-1)];
+                    refreshBy(type);
+                }
             }
         }
+    }
+
+    private void refreshBy(final BucketListItemType type) {
+        //fetches the info from the DB on another thread depending on the type sent
+        AsyncTask<Integer,Void, List<BucketListItem>> task =
+                new AsyncTask<Integer, Void, List<BucketListItem>>() {
+            @Override
+            protected List<BucketListItem> doInBackground(Integer ... params) {
+                BucketListItemType type = BucketListItemType.values()[params[0]];
+                return mDatabaseHandler.getAllFromType(type);
+            }
+
+
+                    @Override
+                    protected void onPostExecute(List<BucketListItem> items) {
+                        //TODO: You need to make sure this only gets called after the search activity actually puts something on the DB
+                        // sometimes this list doesn't contain the new element.
+                        for (Fragment fragment: getSupportFragmentManager().getFragments()){
+                            if(((BucketListFragment) fragment).getType() == type){
+                                ((BucketListFragment) fragment).updateList(items);
+                            }
+                        }
+                    }
+                };
+
+        task.execute(type.ordinal());
     }
 
     @Override

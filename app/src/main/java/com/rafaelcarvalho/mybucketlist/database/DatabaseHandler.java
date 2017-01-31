@@ -97,8 +97,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_COVER, item.getCover());
         values.put(KEY_DESCRIPTION, item.getDescription());
         values.put(KEY_RATING, item.getRating());
-        if(item instanceof BucketListMediaItem)
-            values.put(KEY_YEAR, ((BucketListMediaItem)item).getYear());
+        if(item instanceof BucketListMediaItem) {
+            values.put(KEY_YEAR, ((BucketListMediaItem) item).getYear());
+            values.put(KEY_TYPE, -1);
+        }
         if(item instanceof Book) {
             values.put(KEY_AUTHOR, ((Book) item).getAuthor());
             values.put(KEY_TYPE, BucketListItemType.BOOKS.ordinal());
@@ -145,11 +147,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         //run through the cursor to get the items
+        for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            items.add(cursorToItem(type, cursor));
+        }
+        cursor.close();
+        db.close();
+        Log.d("DATABASE", "REACHED DATABASE");
+        return items;
+    }
 
+    private BucketListItem cursorToItem(BucketListItemType type, Cursor cursor) {
         switch (type)
         {
             case MOVIES:
-                for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
                     Movie movie = new Movie();
                     movie.setId(cursor.getString(0));
                     movie.setTitle(cursor.getString(1));
@@ -158,11 +168,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     movie.setRating(cursor.getFloat(4));
                     movie.setSeen(cursor.getInt(8) > 0);
                     movie.setYear(cursor.getString(5));
-                    items.add(movie);
-                }
-                break;
+
+                return movie;
             case SERIES:
-                for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
                     Series series = new Series();
                     series.setId(cursor.getString(0));
                     series.setTitle(cursor.getString(1));
@@ -171,11 +179,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     series.setRating(cursor.getFloat(4));
                     series.setSeen(cursor.getInt(8) > 0);
                     series.setYear(cursor.getString(5));
-                    items.add(series);
-                }
-                break;
+                return series;
             case BOOKS:
-                for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
                     Book book = new Book();
                     book.setId(cursor.getString(0));
                     book.setTitle(cursor.getString(1));
@@ -184,22 +189,39 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     book.setRating(cursor.getFloat(4));
                     book.setSeen(cursor.getInt(8) > 0);
                     book.setAuthor(cursor.getString(6));
-                    items.add(book);
-                }
-                break;
+                return book;
+            default:
+                return null;
         }
-        cursor.close();
-        db.close();
-        Log.d("DATABASE", "REACHED DATABASE");
-        return items;
     }
 
 
-    public void remove(BucketListItem item) {
+    public BucketListItem remove(String id) {
         SQLiteDatabase db = this.getWritableDatabase();
+        BucketListItem item = getItemById(db, id);
         db.delete(TABLE_ITEMS, KEY_ID + " = ?",
-                new String[] { String.valueOf(item.getId()) });
+                new String[] { id });
         db.close();
+
+        return item;
+    }
+    public BucketListItem getItemById(String id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        BucketListItem item = getItemById(db,id);
+        db.close();
+        return item;
+    }
+
+    private BucketListItem getItemById(SQLiteDatabase db, String id){
+        String selectQuery = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + KEY_ID + " = '" + id + "'";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        if(!cursor.isAfterLast()){
+            return cursorToItem(BucketListItemType.values()[cursor.getInt(7)],cursor);
+        }else{
+            return null;
+        }
+
     }
 
     public void applyChanges(List<Modification> modifications)

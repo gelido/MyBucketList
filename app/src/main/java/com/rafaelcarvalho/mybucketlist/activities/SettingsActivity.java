@@ -23,8 +23,8 @@ import com.rafaelcarvalho.mybucketlist.fragments.SettingsActivityFragment;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    public static final int SETTINGS_CHANGE = 11;
-    public static final String IS_MODIFIED = "Modified";
+
+    public static final String IS_MODIFIED = SettingsActivity.class.getSimpleName() + "Modified";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

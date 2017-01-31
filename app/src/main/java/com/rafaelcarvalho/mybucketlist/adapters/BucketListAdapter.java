@@ -21,6 +21,7 @@ import com.rafaelcarvalho.mybucketlist.R;
 import com.rafaelcarvalho.mybucketlist.activities.DetailActivity;
 import com.rafaelcarvalho.mybucketlist.activities.TabbedListsActivity;
 import com.rafaelcarvalho.mybucketlist.model.BucketListItem;
+import com.rafaelcarvalho.mybucketlist.util.BucketListItemType;
 import com.rafaelcarvalho.mybucketlist.util.Modification;
 import com.squareup.picasso.Picasso;
 
@@ -45,12 +46,15 @@ public class BucketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private OnListChangeListener changeListener;
 
+    private BucketListItemType mType;
+
 
     public BucketListAdapter(Context context, List<BucketListItem> items, int resourcesItemLayout,
-                             OnListChangeListener listener) {
+                             OnListChangeListener listener, BucketListItemType type) {
         this.mContext = context;
         this.mResourcesItemLayout = resourcesItemLayout;
         this.mData = new ArrayList<>();
+        this.mType = type;
         if (listener == null){
             this.changeListener = (TabbedListsActivity)
                     mContext;
@@ -62,8 +66,6 @@ public class BucketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ColorMatrix matrix = new ColorMatrix();
         matrix.setSaturation(0);
         mGrayScale= new ColorMatrixColorFilter(matrix);
-
-
     }
 
     private void sortData(List<BucketListItem> items) {
@@ -174,7 +176,8 @@ public class BucketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         detailIntent.putExtra(DetailActivity.COVER, item.getCover());
         detailIntent.putExtra(DetailActivity.DESCRIPTION, item.getDescription());
         detailIntent.putExtra(DetailActivity.RATING, item.getRating());
-
+        detailIntent.putExtra(DetailActivity.ITEM_ID,item.getId());
+        detailIntent.putExtra(TabbedListsActivity.ITEM_TYPE, mType.ordinal());
         //Create a pair so the animation knows where to go.
         Pair<View,String> pair3 = new Pair<View, String>(v.findViewById(R.id.iv_cover_item)
                 ,uniqueCoverTransitionName);
@@ -183,7 +186,7 @@ public class BucketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ActivityOptions options = ActivityOptions
                 .makeSceneTransitionAnimation((Activity)mContext, pair3);
 
-        mContext.startActivity(detailIntent,options.toBundle());
+        ((TabbedListsActivity)mContext).startActivityForResult(detailIntent,TabbedListsActivity.ITEM_DETAIL,options.toBundle());
     }
 
     public List<BucketListItem> getData() {

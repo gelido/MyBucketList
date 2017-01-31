@@ -27,6 +27,7 @@ public class BucketListItem implements Parcelable{
     protected boolean isSeen;
 
     public BucketListItem() {
+        isSeen = false;
     }
 
     public BucketListItem(String title, String description, float rating, String cover, String id,

@@ -19,7 +19,7 @@ public class Series extends BucketListMediaItem implements Parcelable{
     }
 
     public Series() {
-
+        super();
     }
 
 //    public ArrayList<String> getmEpisodes() {

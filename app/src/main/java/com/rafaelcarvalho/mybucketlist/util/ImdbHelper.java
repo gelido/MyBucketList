@@ -4,10 +4,17 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
 import com.rafaelcarvalho.mybucketlist.R;
+import com.rafaelcarvalho.mybucketlist.gson.MovieTypeAdapter;
+import com.rafaelcarvalho.mybucketlist.gson.SeriesTypeAdapter;
 import com.rafaelcarvalho.mybucketlist.gson.SimpleSearchGson;
 import com.rafaelcarvalho.mybucketlist.Interfaces.DetailFetcher;
 import com.rafaelcarvalho.mybucketlist.Interfaces.DetailFetcherCallback;
@@ -74,7 +81,17 @@ public class ImdbHelper extends HttpHelper{
         public ImdbFetcher(Context mContext, BucketListItemType mItemType) {
             this.mContext = mContext;
             this.mItemType = mItemType;
-            this.mGson = new Gson();
+            GsonBuilder gb = new GsonBuilder();
+            switch (mItemType){
+                case MOVIES:
+                    gb.registerTypeAdapter(Movie.class,new MovieTypeAdapter());
+                    break;
+                case SERIES:
+                    gb.registerTypeAdapter(Series.class,new SeriesTypeAdapter());
+                    break;
+            }
+
+            this.mGson = gb.create();
         }
 
         @Override

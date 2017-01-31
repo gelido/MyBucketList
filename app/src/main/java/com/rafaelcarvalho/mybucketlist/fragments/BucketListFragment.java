@@ -77,7 +77,7 @@ public class BucketListFragment extends Fragment{
         }else{
             items = new ArrayList<>();
         }
-        mAdapter = new BucketListAdapter(getActivity(), items, R.layout.list_item_item, mChangeListener);
+        mAdapter = new BucketListAdapter(getActivity(), items, R.layout.list_item_item, mChangeListener, mType);
     }
 
     @Override

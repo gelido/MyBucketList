@@ -57,7 +57,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         AddItemHandler{
 
 
-    public static final String ITEM_TYPE = "ItemType";
+
     public static final String X_VALUE_SHOW = "XValueShow";
     public static final String Y_VALUE_SHOW = "YValueShow";
     public static final String VIEW_ID = "ViewId";
@@ -132,7 +132,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         //init search on action bar
         mSearchResultView = (RecyclerView) findViewById(R.id.rv_search_result);
         mTxtEmpty = (TextView) findViewById(R.id.tv_empty);
-        mItemType = BucketListItemType.values()[getIntent().getIntExtra(ITEM_TYPE, -1)];
+        mItemType = BucketListItemType.values()[getIntent().getIntExtra(TabbedListsActivity.ITEM_TYPE, -1)];
         mResourceLayout = R.layout.list_search_item;
         //init detail fetcher for the items
         final DetailFetcher fetcher;
@@ -297,7 +297,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                                 new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        mDatabaseHandler.remove(item);
+                                        mDatabaseHandler.remove(item.getId());
                                         mAdapter.add(position,searchItem);
 
                                         mAdapter.notifyDataSetChanged();
