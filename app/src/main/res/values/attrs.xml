@@ -9,4 +9,6 @@
     <attr name="bsPrimaryColor" format="color"/>
     <attr name="bsAccentColor" format="color"/>
     <attr name="bsPrimaryDarkColor" format="color"/>
+    <attr name="bsPrimaryGrayed" format="color"/>
+    <attr name="bsPrimaryGrayedDark" format="color"/>
 </resources>

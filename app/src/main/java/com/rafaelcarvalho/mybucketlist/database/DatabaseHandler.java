@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.rafaelcarvalho.mybucketlist.Interfaces.IDatabaseHandler;
 import com.rafaelcarvalho.mybucketlist.model.Book;
 import com.rafaelcarvalho.mybucketlist.model.BucketListItem;
 import com.rafaelcarvalho.mybucketlist.model.BucketListMediaItem;
@@ -27,7 +28,7 @@ import static com.rafaelcarvalho.mybucketlist.util.Modification.Type.UPDATE;
 /**
  * Created by Rafael on 08/11/15.
  */
-public class DatabaseHandler extends SQLiteOpenHelper {
+public class DatabaseHandler extends SQLiteOpenHelper  implements IDatabaseHandler {
 
     private static DatabaseHandler sDatabaseHandler;
 
@@ -142,6 +143,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         List<BucketListItem> items = new ArrayList<>();
 
         String selectQuery = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + KEY_TYPE + " = " + type.ordinal();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        //run through the cursor to get the items
+        for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            items.add(cursorToItem(type, cursor));
+        }
+        cursor.close();
+        db.close();
+        Log.d("DATABASE", "REACHED DATABASE");
+        return items;
+    }
+
+    public List<BucketListItem> getAllFromTypeAndSeen(BucketListItemType type, boolean isSeen){
+
+        List<BucketListItem> items = new ArrayList<>();
+
+        String selectQuery = "SELECT * FROM " + TABLE_ITEMS + " WHERE " + KEY_TYPE + " = " + type.ordinal()
+                                                + " AND " + KEY_SEEN + " = " + (isSeen?1:0);
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);

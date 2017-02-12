@@ -18,23 +18,26 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.rafaelcarvalho.mybucketlist.Interfaces.IDatabaseHandler;
 import com.rafaelcarvalho.mybucketlist.R;
 import com.rafaelcarvalho.mybucketlist.database.DatabaseHandler;
 import com.rafaelcarvalho.mybucketlist.fragments.SettingsActivityFragment;
 import com.rafaelcarvalho.mybucketlist.model.BucketListItem;
 import com.rafaelcarvalho.mybucketlist.util.AppResources;
+import com.rafaelcarvalho.mybucketlist.util.Constants;
 import com.squareup.picasso.Picasso;
+
+import static com.rafaelcarvalho.mybucketlist.util.Constants.COVER;
+import static com.rafaelcarvalho.mybucketlist.util.Constants.COVER_TRANSITION;
+import static com.rafaelcarvalho.mybucketlist.util.Constants.DESCRIPTION;
+import static com.rafaelcarvalho.mybucketlist.util.Constants.ITEM_ID;
+import static com.rafaelcarvalho.mybucketlist.util.Constants.RATING;
+import static com.rafaelcarvalho.mybucketlist.util.Constants.SEARCH;
+import static com.rafaelcarvalho.mybucketlist.util.Constants.TITLE;
 
 public class DetailActivity extends AppCompatActivity {
 
-    public static final String TITLE = "title";
-    public static final String COVER = "cover";
-    public static final String DESCRIPTION = "description";
-    public static final String RATING = "rating";
-    public static final String COVER_TRANSITION = "coverTransition";
-    public static final String SEARCH = "search";
-    public static final String ITEM_ID = "itemId";
-    public static final String ITEM_TYPE = "itemType";
+
     public static final String IS_DELETED = DetailActivity.class.getSimpleName()+ "Deleted";
 
 
@@ -43,7 +46,7 @@ public class DetailActivity extends AppCompatActivity {
     private ImageView mCover;
     private CollapsingToolbarLayout mCollapsingToolbar;
     private RatingBar mRatingBar;
-    private DatabaseHandler mDatabaseHandler;
+    private IDatabaseHandler mDatabaseHandler;
 
 
     @Override

@@ -11,4 +11,5 @@ public interface OnListChangeListener {
 
     void applyChanges();
 
+    void removeChange(Modification mod);
 }

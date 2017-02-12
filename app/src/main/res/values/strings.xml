@@ -93,4 +93,12 @@
     <string name="unable_fetch_item">Unable to fetch item \'%1$s\'.</string>
     <string name="action_remove">remove</string>
     <string name="success_item_remove">Item successfully removed</string>
+    <string name="title_activity_navigation_drawer">NavigationDrawerActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="seen">Seen</string>
+    <string name="bucket_list">Bucket list</string>
+    <string name="item_archived">Item archived!</string>
+    <string name="error_checking_item">Error checking item!</string>
 </resources>

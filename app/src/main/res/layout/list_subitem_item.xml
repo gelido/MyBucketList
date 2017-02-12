@@ -46,10 +46,12 @@
                     android:padding="15dp"
                     android:layout_weight="1"/>
 
-            <android.support.v7.widget.SwitchCompat
+            <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/switch_seen"
+                android:background="#000F"
+                android:src="@drawable/ic_archive_black_24dp"
+                android:id="@+id/ib_archive"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="2dp"/>
         </LinearLayout>

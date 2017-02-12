@@ -41,8 +41,6 @@ public class Modification <T> {
     }
 
     public T getNewValue() {
-        if (newValue == null)
-            throw new UnsupportedOperationException();
         return newValue;
     }
 

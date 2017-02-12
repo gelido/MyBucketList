@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary_blue">#3F51B5</color>
-    <color name="primary_blue_dark">#303F9F</color>
-    <color name="accent_blue">#ffc107</color>
-    <color name="primary_orange">#FF9800</color>
-    <color name="primary_orange_dark">#F57C00</color>
-    <color name="accent_orange">#FF5722</color>
-    <color name="toolbarText">#FFFFFF</color>
-    <color name="primary_light">#C5CAE9</color>
+    <color name="primary_blue">#FF3F51B5</color>
+    <color name="primary_blue_dark">#FF303F9F</color>
+    <color name="accent_blue">#FFffc107</color>
+    <color name="primary_orange">#FFFF9800</color>
+    <color name="primary_orange_dark">#FFF57C00</color>
+    <color name="accent_orange">#FFFF5722</color>
+    <color name="toolbarText">#FFFFFFFF</color>
+    <color name="primary_light">#FFC5CAE9</color>
     <color name="progressBar">#ca616161</color>
+    <color name="primary_gray_dark">#FF4e4e4e</color>
+    <color name="primary_gray">#FF9c9c9c</color>
 </resources>

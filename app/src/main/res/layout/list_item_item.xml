@@ -31,12 +31,15 @@
             android:layout_gravity="center_horizontal"
             android:layout_weight="30">
 
-            <android.support.v7.widget.SwitchCompat
+            <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/switch_seen"
+                android:background="#000F"
+                android:src="@drawable/ic_visibility_black_24dp"
+                android:id="@+id/ib_archive"
                 android:layout_gravity="right"
-                android:layout_margin="2dp"/>
+                android:layout_margin="5dp"
+                android:padding="10dp"/>
 
             <com.lb.auto_fit_textview.AutoResizeTextView
                 android:layout_width="wrap_content"

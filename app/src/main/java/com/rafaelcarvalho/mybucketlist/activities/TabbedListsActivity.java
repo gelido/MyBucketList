@@ -31,6 +31,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.rafaelcarvalho.mybucketlist.util.Constants.ADD_ITEM;
+import static com.rafaelcarvalho.mybucketlist.util.Constants.ITEM_DETAIL;
+import static com.rafaelcarvalho.mybucketlist.util.Constants.ITEM_TYPE;
+import static com.rafaelcarvalho.mybucketlist.util.Constants.SETTINGS_CHANGE;
+
+@Deprecated
 public class TabbedListsActivity extends AppCompatActivity
         implements BucketListFragment.OnFragmentInteractionListener,View.OnClickListener,
         OnListChangeListener{
@@ -38,12 +44,6 @@ public class TabbedListsActivity extends AppCompatActivity
     private ViewPager mViewPager;
 
     private int mThemeId = -1;
-
-    //CONSTANTS
-    public static final int ADD_ITEM = 1;
-    public static final int ITEM_DETAIL = 2;
-    public static final int SETTINGS_CHANGE = 3;
-    public static final String ITEM_TYPE = "ItemType";
     //It's a Hashmap so we can make sure the same field got only the last change
     private HashMap<Modification.Field,Modification> mModifications = new HashMap<>();
 
@@ -73,7 +73,7 @@ public class TabbedListsActivity extends AppCompatActivity
 
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tabbed_lists);
+        setContentView(R.layout.fragment_lists_tabbed);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -248,6 +248,11 @@ public class TabbedListsActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void removeChange(Modification mod) {
+        mModifications.remove(mod);
+    }
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -269,7 +274,7 @@ public class TabbedListsActivity extends AppCompatActivity
 
             BucketListItemType type = BucketListItemType.values()[position];
             List<BucketListItem> items = mDatabaseHandler.getAllFromType(type);
-            Fragment fragment = BucketListFragment.newInstance(items,type, TabbedListsActivity.this);
+            Fragment fragment = BucketListFragment.newInstance(items,type, TabbedListsActivity.this,false);
             return fragment;
         }
 

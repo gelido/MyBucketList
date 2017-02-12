@@ -7,11 +7,11 @@ import android.content.Intent;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SwitchCompat;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +21,7 @@ import com.rafaelcarvalho.mybucketlist.model.Book;
 import com.rafaelcarvalho.mybucketlist.model.BucketListItem;
 import com.rafaelcarvalho.mybucketlist.model.BucketListMediaItem;
 import com.rafaelcarvalho.mybucketlist.util.BucketListItemType;
+import com.rafaelcarvalho.mybucketlist.util.Constants;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -29,6 +30,9 @@ import java.util.List;
 
 /**
  * Created by Rafael on 30/09/15.
+ *
+ * [WARNING] This class is not used anymore
+ *
  */
 public class BucketListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
@@ -131,8 +135,8 @@ public class BucketListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 
                 }
 
-                itemHolder.switch_seen.setChecked(item.info.isSeen());
-                itemHolder.switch_seen.setOnClickListener(new View.OnClickListener() {
+//                itemHolder.ib_archive.setChecked(item.info.isSeen());
+                itemHolder.ib_archive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if(!item.info.isSeen()){
@@ -181,14 +185,14 @@ public class BucketListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
         String uniqueCoverTransitionName = "coverTransition" + position;
 
         //Animation information
-        detailIntent.putExtra(DetailActivity.COVER_TRANSITION, uniqueCoverTransitionName);
+        detailIntent.putExtra(Constants.COVER_TRANSITION, uniqueCoverTransitionName);
 
         //Send data
         Item item = mData.get(position);
-        detailIntent.putExtra(DetailActivity.TITLE, item.title);
-        detailIntent.putExtra(DetailActivity.COVER, item.info.getCover());
-        detailIntent.putExtra(DetailActivity.DESCRIPTION, item.info.getDescription());
-        detailIntent.putExtra(DetailActivity.RATING, item.info.getRating());
+        detailIntent.putExtra(Constants.TITLE, item.title);
+        detailIntent.putExtra(Constants.COVER, item.info.getCover());
+        detailIntent.putExtra(Constants.DESCRIPTION, item.info.getDescription());
+        detailIntent.putExtra(Constants.RATING, item.info.getRating());
 
         Pair<View,String> pair3 = new Pair<View, String>(v.findViewById(R.id.iv_cover_item)
                 ,uniqueCoverTransitionName);
@@ -237,7 +241,7 @@ public class BucketListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 
         private TextView txtTitle;
         private ImageView iv_cover;
-        private SwitchCompat switch_seen;
+        private ImageButton ib_archive;
         public TextView txtSubTitle;
 
         public ItemViewHolder(View itemView) {
@@ -246,7 +250,7 @@ public class BucketListRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
             txtTitle = (TextView) itemView.findViewById(R.id.tv_title);
             txtSubTitle = (TextView) itemView.findViewById(R.id.tv_subtitle);
             iv_cover = (ImageView) itemView.findViewById(R.id.iv_cover_item);
-            switch_seen = (SwitchCompat) itemView.findViewById(R.id.switch_seen);
+            ib_archive = (ImageButton) itemView.findViewById(R.id.ib_archive);
         }
     }
 

@@ -34,6 +34,7 @@ import com.rafaelcarvalho.mybucketlist.Interfaces.AddItemHandler;
 import com.rafaelcarvalho.mybucketlist.Interfaces.DetailFetcher;
 import com.rafaelcarvalho.mybucketlist.Interfaces.DetailFetcherCallback;
 import com.rafaelcarvalho.mybucketlist.Interfaces.ErrorCallback;
+import com.rafaelcarvalho.mybucketlist.Interfaces.IDatabaseHandler;
 import com.rafaelcarvalho.mybucketlist.Interfaces.ItemSearcher;
 import com.rafaelcarvalho.mybucketlist.Interfaces.OnListChangeListener;
 import com.rafaelcarvalho.mybucketlist.Interfaces.SearchFinishedCallback;
@@ -46,6 +47,7 @@ import com.rafaelcarvalho.mybucketlist.model.BucketListItem;
 import com.rafaelcarvalho.mybucketlist.util.AppResources;
 import com.rafaelcarvalho.mybucketlist.util.BucketListItemType;
 import com.rafaelcarvalho.mybucketlist.util.CacheManager;
+import com.rafaelcarvalho.mybucketlist.util.Constants;
 import com.rafaelcarvalho.mybucketlist.util.GoodReadsHelper;
 import com.rafaelcarvalho.mybucketlist.util.ImdbHelper;
 
@@ -70,7 +72,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     private TextView mTxtEmpty;
     private CacheManager<SimpleSearchGson.SearchItem> mCacheManager;
 
-    private DatabaseHandler mDatabaseHandler;
+    private IDatabaseHandler mDatabaseHandler;
     private CoordinatorLayout mCoordinatorLayout;
     private int mResourceLayout;
     private boolean hasFinished = false;
@@ -132,7 +134,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         //init search on action bar
         mSearchResultView = (RecyclerView) findViewById(R.id.rv_search_result);
         mTxtEmpty = (TextView) findViewById(R.id.tv_empty);
-        mItemType = BucketListItemType.values()[getIntent().getIntExtra(TabbedListsActivity.ITEM_TYPE, -1)];
+        mItemType = BucketListItemType.values()[getIntent().getIntExtra(Constants.ITEM_TYPE, -1)];
         mResourceLayout = R.layout.list_search_item;
         //init detail fetcher for the items
         final DetailFetcher fetcher;
@@ -457,14 +459,14 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             String uniqueCoverTransitionName = "coverTransition" + position;
 
             //Animation information
-            detailIntent.putExtra(DetailActivity.COVER_TRANSITION, uniqueCoverTransitionName);
+            detailIntent.putExtra(Constants.COVER_TRANSITION, uniqueCoverTransitionName);
 
             //Send data
-            detailIntent.putExtra(DetailActivity.TITLE, result.getTitle());
-            detailIntent.putExtra(DetailActivity.COVER, result.getCover());
-            detailIntent.putExtra(DetailActivity.DESCRIPTION, result.getDescription());
-            detailIntent.putExtra(DetailActivity.RATING, result.getRating());
-            detailIntent.putExtra(DetailActivity.SEARCH,true);
+            detailIntent.putExtra(Constants.TITLE, result.getTitle());
+            detailIntent.putExtra(Constants.COVER, result.getCover());
+            detailIntent.putExtra(Constants.DESCRIPTION, result.getDescription());
+            detailIntent.putExtra(Constants.RATING, result.getRating());
+            detailIntent.putExtra(Constants.SEARCH,true);
 
             Pair<View,String> pair3 = new Pair<View, String>(clickedView.findViewById(R.id.iv_cover)
                     ,uniqueCoverTransitionName);

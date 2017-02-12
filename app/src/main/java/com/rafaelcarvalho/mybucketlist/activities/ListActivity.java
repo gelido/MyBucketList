@@ -24,11 +24,13 @@ import com.rafaelcarvalho.mybucketlist.animators.AnimationHelper;
 import com.rafaelcarvalho.mybucketlist.database.DatabaseHandler;
 import com.rafaelcarvalho.mybucketlist.model.BucketListItem;
 import com.rafaelcarvalho.mybucketlist.util.BucketListItemType;
+import com.rafaelcarvalho.mybucketlist.util.Constants;
 import com.rafaelcarvalho.mybucketlist.util.FloatingActionButtonMenu;
 
 import java.util.HashMap;
 import java.util.List;
 
+@Deprecated
 public class ListActivity extends Activity implements View.OnClickListener, View.OnLongClickListener {
 
     private static final int ADD_ITEM = 1;
@@ -150,7 +152,7 @@ public class ListActivity extends Activity implements View.OnClickListener, View
 
     private void handleAddClickTo(BucketListItemType type, final View source) {
         final Intent searchIntent = new Intent(this, SearchActivity.class);
-        searchIntent.putExtra(TabbedListsActivity.ITEM_TYPE, type.ordinal());
+        searchIntent.putExtra(Constants.ITEM_TYPE, type.ordinal());
 
         //Get the center of the FAButton clicked, so the animation knows where to start
         float x = source.getX() +(source.getWidth()/2);

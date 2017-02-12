@@ -13,6 +13,8 @@
         <item name="bsPrimaryColor">@color/primary_blue</item>
         <item name="colorPrimaryDark">@color/primary_blue_dark</item>
         <item name="bsPrimaryDarkColor">@color/primary_blue_dark</item>
+        <item name="bsPrimaryGrayed">@color/primary_gray</item>
+        <item name="bsPrimaryGrayedDark">@color/primary_gray_dark</item>
         <item name="colorAccent">@color/accent_blue</item>
         <item name="bsAccentColor">@color/accent_blue</item>
 
@@ -40,7 +42,7 @@
     <style name="BlueBucket.TabLayout" parent="Widget.Design.TabLayout">
         <!-- enable window content transitions -->
         <item name="tabIndicatorColor">?bsAccentColor</item>
-        <item name="tabBackground">?bsPrimaryColor</item>
+        <!--<item name="tabBackground">?bsPrimaryColor</item>-->
         <item name="tabSelectedTextColor">?bsAccentColor</item>
         <item name="tabTextAppearance">@style/BlueBucket.TabTextAppearance</item>
     </style>
@@ -73,8 +75,7 @@
         <item name="android:textColorPrimary">#212121</item>
     </style>
 
-    <style name="BlueBucket.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-    </style>
+    <style name="BlueBucket.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"></style>
 
     <style name="BlueBucket.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
@@ -88,6 +89,8 @@
         <item name="bsPrimaryColor">@color/primary_orange</item>
         <item name="colorPrimaryDark">@color/primary_orange_dark</item>
         <item name="bsPrimaryDarkColor">@color/primary_orange_dark</item>
+        <item name="bsPrimaryGrayed">@color/primary_gray</item>
+        <item name="bsPrimaryGrayedDark">@color/primary_gray_dark</item>
         <item name="colorAccent">@color/accent_orange</item>
         <item name="bsAccentColor">@color/accent_orange</item>
         <!-- specify enter and exit transitions -->
@@ -114,7 +117,7 @@
     <style name="OrangeBucket.TabLayout" parent="Widget.Design.TabLayout">
         <!-- enable window content transitions -->
         <item name="tabIndicatorColor">?bsAccentColor</item>
-        <item name="tabBackground">?bsPrimaryColor</item>
+        <!--<item name="tabBackground">?bsPrimaryColor</item>-->
         <item name="tabSelectedTextColor">?bsAccentColor</item>
         <item name="tabTextAppearance">@style/OrangeBucket.TabTextAppearance</item>
     </style>
@@ -145,9 +148,9 @@
     </style>
 
     <style name="ParallaxAppBarLayout" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:backgroundTint"> @color/cardview_light_background</item>
+        <item name="android:backgroundTint">@color/cardview_light_background</item>
     </style>
-    <style name="OrangeBucket.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-    </style>
+
+    <style name="OrangeBucket.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"></style>
 
 </resources>

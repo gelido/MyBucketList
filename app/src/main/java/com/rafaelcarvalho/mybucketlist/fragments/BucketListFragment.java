@@ -7,11 +7,9 @@ import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.TextView;
 
 import com.rafaelcarvalho.mybucketlist.Interfaces.OnListChangeListener;
@@ -40,6 +38,8 @@ public class BucketListFragment extends Fragment{
 
     private OnFragmentInteractionListener mListener;
 
+    private boolean mIsArchived;
+
     private BucketListAdapter mAdapter;
 
     private BucketListItemType mType;
@@ -58,11 +58,13 @@ public class BucketListFragment extends Fragment{
      * @return A new instance of fragment BucketListFragment.
      */
     public static BucketListFragment newInstance(List<BucketListItem> items,
-                                                 BucketListItemType type, OnListChangeListener listener) {
+                                                 BucketListItemType type, OnListChangeListener listener,
+                                                    boolean isSeen) {
         BucketListFragment fragment = new BucketListFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(ARG_ITEMS, (ArrayList<? extends Parcelable>) items);
         fragment.setType(type);
+        fragment.setIsSeen(isSeen);
         fragment.setChangeListener(listener);
         fragment.setArguments(args);
         return fragment;
@@ -77,7 +79,7 @@ public class BucketListFragment extends Fragment{
         }else{
             items = new ArrayList<>();
         }
-        mAdapter = new BucketListAdapter(getActivity(), items, R.layout.list_item_item, mChangeListener, mType);
+        mAdapter = new BucketListAdapter(getActivity(), items, R.layout.list_item_item, mChangeListener, mType, mIsArchived);
     }
 
     @Override
@@ -132,6 +134,14 @@ public class BucketListFragment extends Fragment{
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public boolean isSeen() {
+        return mIsArchived;
+    }
+
+    public void setIsSeen(boolean mIsSeen) {
+        this.mIsArchived = mIsSeen;
     }
 
     /**
