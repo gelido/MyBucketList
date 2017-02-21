@@ -21,6 +21,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Properties;
 
 
 /**
@@ -28,18 +29,21 @@ import java.util.ArrayList;
  */
 public class GoodReadsHelper extends HttpHelper{
 
-    private static final String API_KEY = "rctbiuVRT1Pxqhm2WPQcg";
+    private static final String API_KEY = "GOODREADS_API_KEY";
     private static final String GOOD_READS_SEARCH_URL = "https://www.goodreads.com/search/index.xml?q=";
     private static final String GOOD_READS_SHOW_URL = "https://www.goodreads.com/book/show?id=";
 
 
-    public static Call getGoodReads(String title, Callback callback){
-        String url = GOOD_READS_SEARCH_URL + title + "&key=" + API_KEY;
+    public static Call getGoodReads(Context context,String title, Callback callback){
+        Properties properties = new PropertiesUtil(context).getProperties();
+
+        String url = GOOD_READS_SEARCH_URL + title + "&key=" + properties.get(API_KEY);
         return get(callback,url);
     }
 
-    public static Call fetchGoodReads(String id, Callback callback){
-        String url = GOOD_READS_SHOW_URL + id + "&format=xml&key=" + API_KEY;
+    public static Call fetchGoodReads(Context context,String id, Callback callback){
+        Properties properties = new PropertiesUtil(context).getProperties();
+        String url = GOOD_READS_SHOW_URL + id + "&format=xml&key=" +  properties.get(API_KEY);
         Log.d("Parser", url);
         return get(callback,url);
     }
@@ -58,7 +62,7 @@ public class GoodReadsHelper extends HttpHelper{
         @Override
         public void search(String query, final SearchFinishedCallback callback, final ErrorCallback
                            errorCallback) {
-            GoodReadsHelper.getGoodReads(query, new Callback() {
+            GoodReadsHelper.getGoodReads(mContext,query, new Callback() {
                 @Override
                 public void onFailure(Request request, IOException e) {
                     errorCallback.onError(mContext.getString(R.string.error_no_results_found));
@@ -90,14 +94,16 @@ public class GoodReadsHelper extends HttpHelper{
 
     public static class GoodReadsFetcher implements DetailFetcher
     {
+        private Context mContext;
 
-        public GoodReadsFetcher() {
+        public GoodReadsFetcher(Context context) {
+            mContext = context;
         }
 
         @Override
         public void fetchDetails(String id, int position, final DetailFetcherCallback callback, final ErrorCallback errorCallback) {
 
-            GoodReadsHelper.fetchGoodReads(id, new Callback() {
+            GoodReadsHelper.fetchGoodReads(mContext,id, new Callback() {
                 @Override
                 public void onFailure(Request request, IOException e) {
                     errorCallback.onError(e.getMessage());

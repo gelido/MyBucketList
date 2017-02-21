@@ -146,7 +146,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                 fetcher = new ImdbHelper.ImdbFetcher(this,mItemType);
                 break;
             case BOOKS:
-                fetcher = new GoodReadsHelper.GoodReadsFetcher();
+                fetcher = new GoodReadsHelper.GoodReadsFetcher(this);
                 break;
             default:
                 fetcher = new DetailFetcher() {
@@ -256,6 +256,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
                         if (!hasFinished) {
                             getIntent().putExtra(IS_MODIFIED, true);
+                            item.setSeen(getIntent().getBooleanExtra(Constants.IS_ARCHIVE,false));
                             //Remove the item from the list, this is purely visual
                             //the method returns the one removed so we can undo
                             final SimpleSearchGson.SearchItem searchItem =

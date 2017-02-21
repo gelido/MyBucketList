@@ -135,6 +135,7 @@ public class ViewPagerFragment extends Fragment implements  View.OnClickListener
     public void onClick(View view) {
         final Intent searchIntent = new Intent(mContext, SearchActivity.class);
         searchIntent.putExtra(Constants.ITEM_TYPE, mTabLayout.getSelectedTabPosition());
+        searchIntent.putExtra(Constants.IS_ARCHIVE, mIsArchive);
         getActivity().startActivityForResult(searchIntent, Constants.ADD_ITEM);
     }
 

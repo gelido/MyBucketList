@@ -19,4 +19,5 @@ public class Constants {
     public static final String ITEM_ID = "itemId";
     public static final String ITEM_TYPE = "itemType";
     public static final String VIEW_PAGER_FRAGMENT = "viewPagerFragment";
+    public static final String IS_ARCHIVE = "isArchive";
 }

@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.util.TypedValue;
 
-import com.rafaelcarvalho.mybucketlist.R;
 import com.rafaelcarvalho.mybucketlist.model.BucketListItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Created by Rafael on 28/09/15.
@@ -25,7 +25,6 @@ public class AppResources {
         }
         return instance;
     }
-
     /**
      * A map of sample (dummy) items, by ID.
      */
@@ -33,7 +32,7 @@ public class AppResources {
     private List<BucketListItem> movies;
     private List<BucketListItem> series;
     private List<BucketListItem> books;
-
+    private Properties properties;
 
     public List<BucketListItem> getMovies() {
 
